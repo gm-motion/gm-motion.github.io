@@ -46,7 +46,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       company: 'Carolina Hurricanes',
       title: 'Senior Motion Graphics Designer',
       date: "Dec'24 - Present",
-      logo: 'assets/home/clients/carolina-hurricanes.png',
+      logo: 'assets/home/clients/hurricanes.png',
       side: 'left',
       milestones: [
         {
