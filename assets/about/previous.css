@@ -1,0 +1,229 @@
+.timeline-box {
+  position: relative;
+  width: 80%;
+  margin: 5rem auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.timeline {
+  position: absolute;
+  top: 4rem;
+  bottom: 4rem;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: darkgrey;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+.timeline-group {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  padding-bottom: 8rem;
+}
+
+.timeline-group:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-row {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8rem minmax(0, 1fr);
+  align-items: center;
+  column-gap: 2rem;
+  cursor: pointer;
+}
+
+.timeline-side {
+  display: flex;
+  align-items: center;
+}
+
+.timeline-side-left {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.timeline-side-right {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.timeline-date {
+  padding: 1rem 2rem;
+  background: var(--color-primary);
+  border-radius: 2rem;
+  border: none;
+  font-size: calc(var(--font-paragraph) * 1.1);
+  color: var(--color-white);
+  width: fit-content;
+  max-width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.timeline-header {
+  font-size: calc(var(--font-paragraph) * 1.1);
+  font-weight: 600;
+  color: var(--color-text);
+  width: fit-content;
+  max-width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.timeline-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  width: 8rem;
+  height: 8rem;
+  background: var(--color-black);
+  border: 0.25rem solid darkgrey;
+  border-radius: 50%;
+  overflow: hidden;
+
+  z-index: 3;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.timeline-logo img {
+  display: block;
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  object-position: center;
+
+  position: relative;
+}
+
+.timeline-row:hover .timeline-logo,
+.timeline-group.open .timeline-logo {
+  transform: scale(1.05);
+  border-color: var(--color-primary);
+}
+
+.timeline-expand,
+.timeline-expand-inner,
+.milestone-row {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* EXPAND AREA */
+.timeline-expand {
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.35s ease,
+    margin-top 0.35s ease;
+  margin-top: 0;
+}
+
+.timeline-expand.expanded {
+  max-height: 80rem;
+  opacity: 1;
+  margin-top: 2rem;
+}
+
+.milestone-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8rem minmax(0, 1fr);
+  align-items: center;
+  column-gap: 2rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.milestone-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  margin-top: -6px;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.milestone-date-card,
+.milestone-content {
+  align-self: center;
+  max-width: 100%;
+}
+
+.milestone-date-card {
+  padding: 0.85rem 1.5rem;
+  border: 1px solid rgba(200, 200, 200, 0.25);
+  border-radius: 1.25rem;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  font-size: calc(var(--font-paragraph) * 0.95);
+  width: fit-content;
+}
+
+.milestone-content {
+  background: rgba(var(--color-bg-rgb), 0.04);
+  border: 1px solid rgba(200, 200, 200, 0.25);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  color: var(--color-text);
+  width: fit-content;
+  max-width: 30rem;
+}
+
+.milestone-title {
+  font-size: calc(var(--font-paragraph) * 1.05);
+  margin-bottom: 0.5rem;
+}
+
+.milestone-description {
+  font-size: var(--font-paragraph);
+  line-height: 1.5;
+  color: var(--color-subtext);
+}
+
+/* parent on left: date | dot | content */
+.milestone-parent-left .milestone-date-card {
+  grid-column: 1;
+  justify-self: end;
+  text-align: right;
+}
+
+.milestone-parent-left .milestone-content {
+  grid-column: 3;
+  justify-self: start;
+  text-align: left;
+}
+
+.milestone-parent-right .milestone-content {
+  grid-column: 1;
+  justify-self: end;
+  text-align: right;
+}
+
+.milestone-parent-right .milestone-date-card {
+  grid-column: 3;
+  justify-self: start;
+  text-align: left;
+}
