@@ -188,20 +188,18 @@
   align-items: center;
   justify-content: center;
   width: 50%;
-
-
 }
-.about-info-img-container img {
-  background-size: cover;
-  background-repeat: no-repeat;
 
-  aspect-ratio: 1;
+.about-info-img-container img {
+  display: block;
+  width: calc(100% - 4rem);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  box-sizing: border-box;
+
   border-radius: 50%;
   border: 1rem solid var(--color-black);
-
-  width: 100%;
   box-shadow: var(--shadow-card);
-
   margin: 2rem;
 }
 

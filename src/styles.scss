@@ -19,12 +19,12 @@ $dark-theme: mat.define-theme((
 
 /* Default theme (dark) */
 body {
-  @include mat.all-component-themes($light-theme);
+  @include mat.all-component-themes($dark-theme);
 }
 
 /* Light theme override */
-body.dark-theme {
-  @include mat.all-component-colors($dark-theme);
+body.light-theme {
+  @include mat.all-component-colors($light-theme);
 }
 
 * {
@@ -34,29 +34,24 @@ body.dark-theme {
 }
 
 :root {
-
-  --color-bg: #f6f6f6;
+  /* dark mode styles (will change) */
+  --color-bg: #0b0f1a;
   --color-bg-rgb: 11, 15, 26;
+  --color-text: #f6f6f6;
+  --color-subtext: #b2b2b2;
+  --color-surface:  #ffffff;
 
-  --color-text: #11131a; /* slightly deeper for better contrast */
-  --color-subtext: #727272;
-
-  /* KEY FIX: surface should be lighter than bg */
-  --color-surface: #1c2230; 
-
-  /* softer, modern highlight (not flat gray) */
+  /* consistent styles */
   --color-bg-highlight: #b2b2b2;
-
-  --color-primary: #c81e1e; /* less harsh, more premium */
+  --color-primary: #c81e1e;
   --color-white: #f6f6f6;
   --color-black: #15171f;
 
-  --color-error: red;
-  --color-button: black;
-
+  /* box-shadows */
   --shadow-card: rgba(0, 0, 0, 0.3) 0.2rem 0.2rem 1rem;
   --shadow-button: rgba(0, 0, 0, 0.3) 0.2rem 0.2rem 1rem;
 
+  /* font-sizes */
   --font-tiny: clamp(0.75rem, 0.875vw, 1rem);
   --font-paragraph: clamp(1.25rem, 1.35vw, 1.5rem);
   --font-title: clamp(1.75rem, 0.5rem + 2vw + 1vh, 2rem);
@@ -65,21 +60,20 @@ body.dark-theme {
   --font-header2: clamp(3rem, 5vw, 5rem); 
   --font-header3: clamp(2rem, 2.5vw, 3rem); 
 
+  /* other variables */
   --base: 0.6rem;
   --fade-height: 12vh;
 
 }
 
 /* Light Mode Overrides */
-.dark-theme {
-  --color-bg: #0b0f1a; /* richer dark instead of pure near-black */
+.light-theme {
+  /* light mode override styles (will change) */
+  --color-bg: #f6f6f6;
   --color-bg-rgb: 11, 15, 26;
-
-  --color-text: #f6f6f6;
-  --color-subtext: #b2b2b2;
-
-  /* KEY FIX: layered surface instead of pure white */
-  --color-surface:  #ffffff;
+  --color-text: #11131a; /* slightly deeper for better contrast */
+  --color-subtext: #727272;
+  --color-surface: #1c2230; 
 }
 
 app-root {

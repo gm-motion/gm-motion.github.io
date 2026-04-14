@@ -57,9 +57,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isHome(): boolean {
     if (this.router.url === '/' || this.router.url === '/home') {
-      if (this.mobileMenuOpen) return this.theme.isDark();
+      if (this.mobileMenuOpen) return this.theme.isLight();
       return true;
-    } else return this.theme.isDark();
+    } else return this.theme.isLight();
   }
 
   ngOnInit() {
@@ -91,11 +91,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     const offPath = host.querySelector('.mdc-switch__icon--off path');
 
     if (onPath) {
-      onPath.setAttribute('d', this.sunPath);
+      onPath.setAttribute('d', this.moonPath);
     }
 
     if (offPath) {
-      offPath.setAttribute('d', this.moonPath);
+      offPath.setAttribute('d', this.sunPath);
     }
   }
 
