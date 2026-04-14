@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   isHome(): boolean {
     if (this.router.url === '/' || this.router.url === '/home') {
       if (this.mobileMenuOpen) return this.theme.isLight();
-      return true;
+      return false;
     } else return this.theme.isLight();
   }
 

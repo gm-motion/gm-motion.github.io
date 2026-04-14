@@ -1,11 +1,11 @@
 
 
 
-<div class="nav-bar" [ngClass]="{ 'nav-light': isHome(), 'nav-dark': !isHome() }">
+<div class="nav-bar" [ngClass]="{ 'nav-dark': isHome(), 'nav-light': !isHome() }">
   <button
     routerLink="/home"
     class="logo"
-    [ngClass]="{ 'logo-light': isHome(), 'logo-dark': !isHome() }">
+    [ngClass]="{ 'logo-dark': isHome(), 'logo-light': !isHome() }">
   </button>
 
   <!-- desktop nav -->
@@ -20,7 +20,7 @@
   <button
     class="hamburger"
     type="button"
-    [ngClass]="{ 'hamburger-light': isHome(), 'hamburger-dark': !isHome() }"
+    [ngClass]="{ 'hamburger-dark': isHome(), 'hamburger-light': !isHome() }"
     aria-label="Toggle navigation menu"
     [class.open]="mobileMenuOpen"
     (click)="toggleMobileMenu()">
