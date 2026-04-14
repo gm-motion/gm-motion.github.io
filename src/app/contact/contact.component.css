@@ -1,0 +1,479 @@
+.spacer {
+  background: var(--color-bg);
+  width: 100vw;
+  height: calc(10vh + 4rem);
+}
+
+.contact-container {
+  width: 50vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  font-size: var(--font-header2);
+  padding-bottom: 1.2rem;
+}
+
+.header::before,
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 10px;
+  width: calc(50% - 0.5rem);
+  border: 3px solid var(--color-primary);
+  border-bottom: 0;
+
+  transform: scaleX(0);
+  transition: transform 3.0s ease;
+}
+
+.header::before {
+  left: 0;
+  border-left: 0;
+  border-radius: 0 2.5rem 0 0;
+  transform-origin: right;
+}
+
+.header::after {
+  right: 0;
+  border-right: 0;
+  border-radius: 2.5rem 0 0 0;
+  transform-origin: left;
+}
+
+.header.visible::before,
+.header.visible::after {
+  transform: scaleX(1);
+}
+
+.contact-blurb {
+  padding: 1rem 0rem;
+  font-size: var(--font-paragraph);
+  color: #828282;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  margin: 3rem;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 2rem;
+}
+
+.form-info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+}
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  gap: 1rem;
+}
+
+.form-input label {
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+}
+
+.required {
+  font-size: 0.75em;        
+  color: var(--color-bg-highlight);            
+  vertical-align: super;
+  margin-left: 0.1rem;
+}
+
+.form-input textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #c2c2c2;
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.form-info-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.form-info-message label {
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  text-align: left;
+}
+
+.form-info-message textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #c2c2c2;
+  border-radius: 1rem;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 2rem;
+}
+
+.form-info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  gap: 0.5rem;
+}
+
+.form-input label {
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+}
+
+.form-input textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #c2c2c2;
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.form-info-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.form-info-message label {
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  text-align: left;
+}
+
+.form-info-message textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--color-bg-highlight);
+  border-radius: 1rem;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  font-size: var(--font-paragraph);
+  color: var(--color-surface);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  align-self: center;
+}
+
+.form-container textarea {
+  transition: border 0.2s ease;
+}
+
+.form-container textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.my-button {
+  display: inline-block; /* or block / flex */
+  position: relative;
+  overflow: hidden;
+
+  margin-top: 0rem;
+  margin-bottom: 5vh;
+  padding: 1rem 5rem;
+  font-size: var(--font-paragraph);
+  border-radius: 2rem;
+  border: 1px solid var(--color-white);
+  box-shadow: var(--shadow-button);
+  color: var(--color-bg);
+  background: var(--color-surface);
+
+  transition: all 0.8s ease;
+}
+
+.my-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 160%;
+  height: 100%;
+  background: var(--color-primary);
+  transform: translateX(-120%) skewX(-20deg);
+  transform-origin: left;
+  transition: all 0.8s ease;
+  z-index: 0;
+}
+
+.my-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.my-button:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.my-button:hover::before {
+  transform: translateX(0) skewX(-20deg);
+}
+
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(var(--fade-height));
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================
+   CONTACT RESPONSIVE FIXES
+   ========================= */
+
+/* Safer sizing */
+.contact-container,
+.form-container,
+.form-container form {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.contact-blurb,
+.form-input label,
+.form-info-message label {
+  text-align: center;
+}
+
+
+/* =========================
+   SMALL LAPTOP / TABLET
+   ========================= */
+@media (max-width: 1024px) {
+  .contact-container {
+    width: 70vw;
+  }
+
+  .form-container form {
+    width: 70vw;
+  }
+
+  .contact-blurb {
+    font-size: calc(var(--font-paragraph) * 0.95);
+  }
+}
+
+
+/* =========================
+   TABLET
+   ========================= */
+@media (max-width: 768px) {
+
+  .contact-container {
+    width: calc(100vw - 2rem);
+    padding: 0 1rem;
+  }
+
+  .header {
+    font-size: calc(var(--font-header2) * 0.8);
+  }
+
+  .header::before,
+  .header::after {
+    height: 8px;
+    border-width: 2px;
+  }
+
+  .contact-blurb {
+    padding: 0.75rem 0 0 0;
+    font-size: calc(var(--font-paragraph) * 0.92);
+    text-align: center;
+  }
+
+  .form-container {
+    margin: 2rem 0;
+  }
+
+  .form-container form {
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  .form-info-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-input {
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .form-input label,
+  .form-info-message label {
+    font-size: calc(var(--font-paragraph) * 0.95);
+    text-align: left;
+  }
+
+  .form-input textarea,
+  .form-info-message textarea {
+    font-size: calc(var(--font-paragraph) * 0.95);
+  }
+
+  .form-info-message textarea {
+    min-height: 10rem;
+  }
+
+  .my-button {
+    width: 100%;
+    max-width: 18rem;
+    padding: 1rem 2rem;
+    font-size: calc(var(--font-paragraph) * 1);
+    margin-bottom: 2rem;
+  }
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+@media (max-width: 480px) {
+
+  .contact-container {
+    width: calc(100vw - 1.25rem);
+    padding: 0 0.625rem;
+  }
+
+  .header {
+    font-size: calc(var(--font-header2) * 0.68);
+  }
+
+  .contact-blurb {
+    font-size: calc(var(--font-paragraph) * 0.88);
+    line-height: 1.5;
+  }
+
+  .form-container {
+    margin: 1.5rem 0;
+  }
+
+  .form-container form {
+    gap: 1.25rem;
+  }
+
+  .form-info-row {
+    gap: 1rem;
+  }
+
+  .form-input label,
+  .form-info-message label {
+    font-size: calc(var(--font-paragraph) * 0.9);
+  }
+
+  .required {
+    font-size: 0.65em;
+  }
+
+  .form-input textarea {
+    min-height: 2.5rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.75rem;
+  }
+
+  .form-info-message textarea {
+    min-height: 8.5rem;
+    padding: 0.85rem;
+    border-radius: 0.85rem;
+  }
+
+  .form-input textarea,
+  .form-info-message textarea {
+    font-size: calc(var(--font-paragraph) * 0.9);
+  }
+
+  .my-button {
+    max-width: 100%;
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: calc(var(--font-paragraph) * 0.95);
+    border-radius: 1.5rem;
+  }
+}

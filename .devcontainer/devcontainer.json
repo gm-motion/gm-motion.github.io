@@ -1,0 +1,23 @@
+{
+  "name": "Angular Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:latest",
+  "postCreateCommand": "npm install -g npm@11.1.0 && npm install -g @angular/cli && npm install",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "angular.ng-template",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      }
+    }
+  }
+}

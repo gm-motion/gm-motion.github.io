@@ -1,0 +1,147 @@
+<div class="title-container">
+  <div class="title-video">
+    <div class="title-video-frame">
+      <iframe
+        src="https://player.vimeo.com/video/1042016423?h=01b88f7dcb&autoplay=1&muted=1&background=1&playsinline=1"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <div class="title-video-info">
+    <span class="video-name">"Run This Town" </span>| Detroit Red Wings
+  </div>
+
+  <button class="chevron-container" type="button" (click)="scrollDown()">
+    <span class="chevron"></span>
+    <span class="chevron"></span>
+    <span class="chevron"></span>
+  </button>
+</div>
+
+<div #infoPanel class="info-container" >
+
+  <div class="info-quote">
+    "128GB of RAM and a dream"
+  </div>
+
+  <div class="info-content">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+    <br><br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+  </div>
+
+</div>
+
+<section #fadeItem class="scroll-stack fade-in">
+  <div class="stack-stage" #stackStage>
+    <div class="stack-sticky">
+      <div class="scroll-stack-card" #stackCard>
+        <div class="card-video">
+          <iframe
+            title="Project One video"
+            src="https://player.vimeo.com/video/1089394686?h=355894d260&background=1&autoplay=1&loop=1&muted=1"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="card-content">
+          <h2>Project One</h2>
+          <p>/ Interactive visualization / graphics work</p>
+        </div>
+      </div>
+
+      <div class="scroll-stack-card" #stackCard>
+        <div class="card-video">
+          <iframe title="Project Two video"
+           src="https://player.vimeo.com/video/937050466?h=4e30c4a2ec&background=1&autoplay=1&loop=1&muted=1" 
+           frameborder="0"
+           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+           allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="card-content">
+          <h2>Project Two</h2>
+          <p>/ AI / simulation system</p>
+        </div>
+      </div>
+
+      <div class="scroll-stack-card" #stackCard>
+        <div class="card-video">
+          <iframe
+            title="Project Three video"
+            src="https://player.vimeo.com/video/1089394686?h=355894d260&background=1&autoplay=1&loop=1&muted=1"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="card-content">
+          <h2>Project Three</h2>
+          <p>/ Full-stack / data platform</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div #fadeItem class="work-container fade-in">
+  <span #headerEl class="header">GFX Work</span>
+  <div class="work-line"></div>
+  <div class="work-card">
+    <div class="work-card-visual carolina"></div>
+    <div class="work-card-name">Carolina Hurricanes '25</div>
+  </div>
+  <div class="work-line"></div>
+  <div class="work-card">
+    <div class="work-card-visual red-wings"></div>
+    <div class="work-card-name">Detroit Red Wings '24</div>
+  </div>
+  <div class="work-line"></div>
+  <div class="work-card">
+    <div class="work-card-visual checkers"></div>
+    <div class="work-card-name">Charlotte Checkers '22</div>
+  </div>
+  <div class="work-line"></div>
+
+  <button routerLink="/gfx-work" class="my-button"> 
+    <span>More Projects</span>
+  </button>
+</div>
+
+<div #fadeItem class="clients-container fade-in">
+  <span #headerEl class="header">Partnered Clients</span>
+  <div class="partners-banner">
+    <div class="carousel">
+      <div class="group">
+        <div class="card carolina"></div>
+        <div class="card red-wings"></div>
+        <div class="card tigers"></div>
+        <div class="card maple-leafs"></div>
+        <div class="card checkers"></div>
+        <div class="card carolina-panthers"></div>
+      </div>
+      <!-- Add `aria-hidden` to hide the duplicated cards from screen readers. -->
+      <div aria-hidden class="group">
+        <div class="card carolina"></div>
+        <div class="card red-wings"></div>
+        <div class="card tigers"></div>
+        <div class="card maple-leafs"></div>
+        <div class="card checkers"></div>
+        <div class="card carolina-panthers"></div>
+      </div>
+    </div>
+  </div>
+
+  <button routerLink="/contact" class="my-button">
+    <span>Let's Build Together!</span>
+  </button>
+</div>

@@ -1,0 +1,133 @@
+<div class="spacer"></div>
+
+<div #fadeItem class="about-container fade-in">
+  <span #headerEl class="header">About Me</span>
+  <div class="about-info-container">
+    <div class="about-info-text">
+      <span class="hello-header">Hello!</span>
+      <span class="name-header">
+        I'm 
+        <span class="name-header-nowrap">
+          <span #nameElement class="name-header-element">Gavin Morris</span>.
+        </span>
+      </span>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing ed do eiusmod tempor 
+      incididunt ut labore
+      </p>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+      </p>
+<!-- 
+      <div class="skills-container">
+        <div class="skills-card-row">
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/aftereffects.png" alt="After Effects">
+            </div>
+            <span class="skills-card-text">After Effects</span>
+          </div>
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/blender.png" alt="Blender">
+            </div>
+            <span class="skills-card-text">Blender</span>
+          </div>
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/cinema4d.png" alt="Cinema 4D">
+            </div>
+            <span class="skills-card-text">Cinema 4D</span>
+          </div>
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/premierepro.png" alt="Premiere Pro">
+            </div>
+            <span class="skills-card-text">Premiere Pro</span>
+          </div>
+        </div>
+        <div class="skills-card-row">
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/premierepro.png" alt="Premiere Pro">
+            </div>
+            <span class="skills-card-text">Premiere Pro</span>
+          </div>
+          <div class="skills-card">
+            <div class="skills-card-img">
+              <img src="assets/about/illustrator.png" alt="Illustrator">
+            </div>
+            <span class="skills-card-text">Illustrator</span>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="about-info-img-container">
+      <img src="assets/about/headshot.png" alt="Headshot Photo">
+    </div>
+  </div>
+</div>
+
+<div #fadeItem class="timeline-container fade-in">
+  <span #headerEl class="header">Timeline</span>
+  <div class="timeline-info">Scroll through the timeline to view my experience.</div>
+</div>
+
+<div #fadeItem class="timeline-box">
+  <div class="timeline"></div>
+
+  @for (item of timelineItems; track item; let i = $index) {
+    <div
+      #fadeItem
+      class="timeline-group"
+      [class.group-left]="item.side === 'left'"
+      [class.group-right]="item.side === 'right'"
+    >
+      <div #fadeItem class="timeline-row fade-in">
+        <div class="timeline-side timeline-side-left">
+          <div class="timeline-date">
+            {{ item.date }}
+          </div>
+        </div>
+
+        <div class="timeline-logo">
+          <img [src]="item.logo" [alt]="item.company" />
+        </div>
+
+        <div class="timeline-side timeline-side-right">
+          <div class="timeline-header">
+            {{ item.title }}
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-expand">
+        <div class="timeline-expand-inner">
+          @for (milestone of item.milestones; track milestone) {
+            <div #fadeItem class="fade-in">
+              <div
+                class="milestone-row"
+                [class.milestone-parent-left]="item.side === 'left'"
+                [class.milestone-parent-right]="item.side === 'right'"
+              >
+                <div class="milestone-date-card">
+                  {{ milestone.date }}
+                </div>
+
+                <div class="milestone-dot"></div>
+
+                <div class="milestone-content">
+                  <div class="milestone-title">{{ milestone.title }}</div>
+                  <div class="milestone-description">
+                    {{ milestone.description }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
