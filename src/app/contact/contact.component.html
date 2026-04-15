@@ -9,21 +9,22 @@
       <div class="form-info-row">
         <div class="form-input">
           <label for="first-name">First Name<span class="required">*</span></label>
-          <textarea type="text" id="first-name" name="first-name" rows=1 required></textarea>
+          <textarea id="first-name" name="first_name" rows="1" required></textarea>
         </div>
         <div class="form-input">
           <label for="last-name">Last Name<span class="required">*</span></label>
-          <textarea type="text" id="last-name" name="last-name" rows=1 required></textarea>
+          <textarea id="last-name" name="last_name" rows="1" required></textarea>
         </div>
       </div>
+
       <div class="form-info-row">
         <div class="form-input">
           <label for="email">Email<span class="required">*</span></label>
-          <textarea type="text" id="email" name="email" rows=1 required></textarea>
+          <textarea id="email" name="email" rows="1" required></textarea>
         </div>
         <div class="form-input">
           <label for="organization">Team/Organization<span class="required">*</span></label>
-          <textarea type="text" id="organization" name="organization" rows=1 required></textarea>
+          <textarea id="organization" name="organization" rows="1" required></textarea>
         </div>
       </div>
 
@@ -31,41 +32,41 @@
         <label for="message">Message<span class="required">*</span></label>
         <textarea id="message" name="message" rows="10" required></textarea>
       </div>
-      <button routerLink="/contact" class="my-button">
-            <span>Send</span>
+
+      <button
+        type="submit"
+        class="my-button"
+        [disabled]="isSending()">
+        @if (!isSending()) {
+          <span>Send</span>
+        } @else {
+          <span class="button-spinner" aria-label="Sending"></span>
+        }
       </button>
     </form>
   </div>
 </div>
 
-
-
-<!-- <form (submit)="sendEmail($event)">
-  <label for="name">Name</label>
-  <textarea type="text" id="name" name="name" rows=1 required placeholder="What's a good name for you?"></textarea>
-
-  <label for="email">Email</label>
-  <textarea type="email" id="email" name="email" rows=1 required placeholder="What's a good email for you?"></textarea>
-
-  <label for="message">Message</label>
-  <textarea id="message" name="message" rows="8" required placeholder="What would you like to send me?"></textarea>
-  <div class="button-error-container">
-  <button type="submit" [disabled]="isSending()">  
-    @if (isSending()) {
-      <span class="spinner"></span>
-    }
-    @else {
-      Send
-    }
-  </button>
-    @if (sendEmailTriggered())
-    {
+@if (sendEmailTriggered() || showSubmissionOverlay()) {
+  <div class="submission-overlay">
+    <div class="submission-card">
       @if (emailSuccess()) {
-        <div class="email-success">Message Sent!</div>
+        <h2 class="submission-card-title">Success ✅</h2>
+        <p class="submission-card-text">
+          Thank you for sending me a message. I’ll get back to you as soon as I can.
+        </p>
+        <button class="my-button" (click)="closeSubmissionOverlay()">
+          <span>Continue Exploring</span>
+        </button>
+      } @else {
+        <h2 class="submission-card-title">Failure ❌</h2>
+        <p class="submission-card-text">
+          Something went wrong. Please try again, and I’ll get back to you as soon as I can.
+        </p>
+        <button class="my-button" (click)="closeSubmissionOverlay()">
+          <span>Try Again</span>
+        </button>
       }
-      @else {
-        <span class="email-error">Error Sending!</span>
-      }
-    }
+    </div>
   </div>
-</form> -->
+}

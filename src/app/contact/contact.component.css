@@ -323,6 +323,96 @@
   text-align: center;
 }
 
+.form-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Spinner inside button */
+.button-spinner {
+  display: inline-block;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 0.2rem solid transparent;
+  border-top: 0.14rem solid var(--color-bg);
+  border-right: 0.14rem solid var(--color-bg);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Disable button while sending */
+.my-button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Full-screen overlay */
+.submission-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(var(--color-bg-rgb), 0.15);
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.submission-card {
+  position: relative;
+
+  width: min(90vw, 36rem);
+  padding: 2.5rem 2rem;
+  border-radius: 1.5rem;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.submission-card-title {
+  margin: 0 0 1rem 0;
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  line-height: 1;
+}
+
+.submission-card-text {
+  margin: 0 0 1.75rem 0;
+  max-width: 28rem;
+  font-size: var(--font-paragraph);
+  line-height: 1.6;
+  color: var(--color-subtext);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes submissionCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 
 /* =========================
    SMALL LAPTOP / TABLET

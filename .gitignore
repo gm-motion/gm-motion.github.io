@@ -43,3 +43,5 @@ Thumbs.db
 
 # GitHub Pages custom domain
 src/CNAME
+
+.env

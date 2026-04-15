@@ -74,9 +74,15 @@ export class ContactComponent implements OnDestroy, AfterViewInit {
     this.fadeItemsSub?.unsubscribe();
   }
 
+  showSubmissionOverlay = signal(false);
   sendEmailTriggered = signal(false);
   emailSuccess = signal(false);
   isSending = signal(false);
+
+  closeSubmissionOverlay(): void {
+    this.showSubmissionOverlay.set(false);
+    this.sendEmailTriggered.set(false);
+  }
 
   sendEmail(event: Event): void {
     event.preventDefault();
@@ -96,6 +102,7 @@ export class ContactComponent implements OnDestroy, AfterViewInit {
         },
         (error) => {
           this.sendEmailTriggered.set(true);
+          this.emailSuccess.set(false); // ADD THIS
           this.isSending.set(false);
           alert('Failed to send email. Please try again.');
         },

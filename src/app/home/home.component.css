@@ -443,6 +443,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .carousel {
@@ -457,16 +458,21 @@
   width: 20vw;
   height: calc(35vh - 4rem);
   margin: 2rem;
-  color: white;
   padding: 2rem;
+  box-sizing: border-box;
+
+  color: white;
   font-size: var(--font-title);
   justify-content: center;
   text-align: center;
   align-items: center;
 
-  background-size: contain;   /* or cover */
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .carolina { background-image: url('/assets/home/clients/hurricanes.webp'); }
@@ -480,7 +486,9 @@
   display: flex;
   flex-direction: row;
   will-change: transform;
-  animation: scrolling 10s linear infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  animation: scrolling 12s linear infinite;
 }
 
 @keyframes scrolling {
