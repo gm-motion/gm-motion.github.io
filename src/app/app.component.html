@@ -4,8 +4,11 @@
 <div class="nav-bar" [ngClass]="{ 'nav-dark': isHome(), 'nav-light': !isHome() }">
   <button
     routerLink="/home"
-    class="logo"
-    [ngClass]="{ 'logo-dark': isHome(), 'logo-light': !isHome() }">
+    class="logo">
+    <img
+      [src]="isHome() ? 'assets/home/logo.svg' : 'assets/home/logo-white.svg'"
+      alt="Logo"
+    />
   </button>
 
   <!-- desktop nav -->
@@ -91,7 +94,14 @@
   </div>
   <div class="footer-socials-bar">
     <div class="footer-logo-theme-row">
-      <button routerLink="/home" class="logo logo-light"></button>
+        <button
+          routerLink="/home"
+          class="logo logo-light">
+          <img
+            src="assets/home/logo-white.svg"
+            alt="Logo"
+          />
+        </button>
       <div class="theme-toggle">
         <mat-slide-toggle
           #darkModeSwitch

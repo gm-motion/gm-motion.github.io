@@ -34,7 +34,7 @@
   justify-content: center;
   gap: 2rem;
 
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -125,7 +125,7 @@
 }
 
 .about-info-img-container {
-  width: clamp(18rem, 42vw, 38rem);
+  width: clamp(18rem, 45vw, 50rem);
   aspect-ratio: 1 / 1;
   margin: 0;
 
@@ -441,6 +441,19 @@
   opacity: 1;
   transform: translateY(0);
 
+}
+
+@media (max-width: 1500px) {
+  .about-info-container {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    gap: 2rem;
+
+    width: 90%;
+    margin: 0 auto;
+  }
 }
 
 /* =========================

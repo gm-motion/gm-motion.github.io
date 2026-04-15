@@ -469,12 +469,12 @@
   background-position: center;
 }
 
-.carolina { background-image: url('/assets/home/clients/hurricanes.png'); }
-.red-wings { background-image: url('/assets/home/clients/red-wings.png'); }
-.carolina-panthers { background-image: url('/assets/home/clients/carolina-panthers.png'); }
-.checkers { background-image: url('/assets/home/clients/checkers.png'); }
-.tigers { background-image: url('/assets/home/clients/tigers.png'); }
-.maple-leafs { background-image: url('/assets/home/clients/maple-leafs.png'); }
+.carolina { background-image: url('/assets/home/clients/hurricanes.webp'); }
+.red-wings { background-image: url('/assets/home/clients/red-wings.webp'); }
+.carolina-panthers { background-image: url('/assets/home/clients/carolina-panthers.webp'); }
+.checkers { background-image: url('/assets/home/clients/checkers.webp'); }
+.tigers { background-image: url('/assets/home/clients/tigers.webp'); }
+.maple-leafs { background-image: url('/assets/home/clients/maple-leafs.webp'); }
 
 .group {
   display: flex;

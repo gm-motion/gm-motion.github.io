@@ -46,7 +46,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       company: 'Carolina Hurricanes',
       title: 'Senior Motion Graphics Designer',
       date: "Dec'24 - Present",
-      logo: 'assets/home/clients/hurricanes.png',
+      logo: 'assets/home/clients/hurricanes.webp',
       side: 'left',
       milestones: [
         {
@@ -66,7 +66,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       company: 'Detroit Red Wings',
       title: 'Motion Graphics Artist',
       date: "Sep'23 - Dec'24",
-      logo: 'assets/home/clients/red-wings.png',
+      logo: 'assets/home/clients/red-wings.webp',
       side: 'right',
       milestones: [
         {
@@ -85,14 +85,13 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       company: 'Detroit Tigers',
       title: 'Motion Graphics Artist',
       date: "Sep'23 - Dec'24",
-      logo: 'assets/home/clients/tigers.png',
+      logo: 'assets/home/clients/tigers.webp',
       side: 'left',
       milestones: [
         {
           date: "Jul'24",
           title: 'Tigers Clinch Playoffs',
-          description:
-            'Description of graphics that were animated',
+          description: 'Description of graphics that were animated',
         },
       ],
     },
@@ -100,7 +99,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       company: 'Charlotte Checkers',
       title: 'Motion Graphics Designer',
       date: "Oct'21 - Oct'23",
-      logo: 'assets/home/clients/checkers.png',
+      logo: 'assets/home/clients/checkers.webp',
       side: 'right',
       milestones: [
         {
