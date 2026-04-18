@@ -192,6 +192,10 @@
   width: 60vw;
 }
 
+.info-content p {
+  margin-bottom: 1rem;
+}
+
 .scroll-stack {
   position: relative;
   margin: -20rem 0rem 0rem 0rem;
@@ -344,20 +348,29 @@
   align-items: center;
   justify-content: space-between;
   width: 60vw;
+
   margin: 0 auto;
+  text-decoration: none;
 }
 
 .work-card-visual {
+  padding: none;
   background: var(--color-black);
-  height: 30vh;
+  aspect-ratio: 16 / 9;
   width: 25vw;
   box-shadow: var(--shadow-card);
   opacity: 0.75;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  pointer-events: none;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  background-size: contain;   /* or cover */
-  background-repeat: no-repeat;
-  background-position: center;
+.work-card-video {
+  height: 100%;
+  width: 100%;
 }
 
 .work-card-name {
@@ -458,7 +471,7 @@
   width: 20vw;
   height: calc(35vh - 4rem);
   margin: 2rem;
-  padding: 2rem;
+  padding: 1rem;
   box-sizing: border-box;
 
   color: white;
@@ -473,6 +486,14 @@
 
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+.work-card-img,
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* fills nicely */
+  display: block;
 }
 
 .carolina { background-image: url('/assets/home/clients/hurricanes.webp'); }
@@ -510,72 +531,6 @@
   opacity: 1;
   transform: translateY(0);
 }
-
-
-/* @media (max-width: 1024px) {
-  .title-video-info {
-    margin: 1.5rem;
-    font-size: calc(var(--font-tiny) * 0.95);
-  }
-
-  .info-content {
-    width: 75vw;
-  }
-
-  .scroll-stack {
-    margin-top: -10rem;
-  }
-
-  .scroll-stack-card {
-    width: 94vw;
-  }
-
-  .card-content {
-    padding: 1.5rem;
-  }
-
-  .card-content h2 {
-    font-size: calc(var(--font-header3) * 0.95);
-  }
-
-  .card-content p {
-    font-size: calc(var(--font-paragraph) * 0.95);
-  }
-
-  .work-container,
-  .clients-container {
-    width: 85vw;
-  }
-
-  .work-line {
-    width: 85vw;
-  }
-
-  .work-card {
-    width: 80vw;
-    gap: 2rem;
-  }
-
-  .work-card-visual {
-    width: 32vw;
-    height: calc(32vw * 9 / 16);
-    min-height: 10rem;
-  }
-
-  .card {
-    width: 26vw;
-    margin: 1.5rem;
-  }
-
-  .partners-banner {
-    height: 28vh;
-  }
-
-  .card {
-    height: calc(28vh - 3rem);
-  }
-} */
-
 
 @media (max-width: 768px) {
 

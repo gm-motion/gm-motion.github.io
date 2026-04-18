@@ -287,8 +287,8 @@ html, body {
 .footer-social-icon {
   position: relative;
   z-index: 1;
-  width: 3rem;
-  height: 3rem;
+  width: 65%;
+  height: 65%;
 }
 
 .footer-social:hover {
@@ -391,8 +391,8 @@ html, body {
   }
 
   .footer-social-icon {
-    width: 2rem;
-    height: 2rem;
+    width: 65%;
+    height: 65%;
   }
 
   .footer-logo-theme-row {

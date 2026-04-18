@@ -119,27 +119,56 @@
   align-items: center;
   justify-content: center;
   margin: 1rem;
+  text-decoration: none;
+  gap: 2rem;
+}
 
-  gap: 1rem;
+.gx-card:hover {
+  cursor: pointer;
 }
 
 .gfx-card-visual {
-  width: calc(80vw / 3 - 2rem);
-  height: calc((80vw / 3 - 2rem) * 9 / 16);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   background: var(--color-black);
   box-shadow: var(--shadow-card);
   transition: all 0.2s ease;
+  padding: none;
+}
+
+
+.gfx-card-video {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .gfx-card-visual:hover {
   transform: scale(1.05);
-  cursor: pointer;
+}
+
+.media-card-img,
+.gfx-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* fills nicely */
+  display: block;
 }
 
 .gfx-card-name {
   font-size: var(--font-title);
   color: var(--color-text);
+  transition: transform 0.2s ease, font-weight 0.2s ease;
+}
+
+.gfx-card-name:hover {
+  font-weight: 550;
 }
 
 .media-container {

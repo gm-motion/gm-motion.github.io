@@ -1,17 +1,31 @@
 <div class="title-container">
   <div class="title-video">
     <div class="title-video-frame">
-      <iframe
-        src="https://player.vimeo.com/video/1042016423?h=01b88f7dcb&autoplay=1&muted=1&background=1&playsinline=1"
-        frameborder="0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen>
-      </iframe>
+      @if (titleVideo?.sourceType === 'upload' && titleVideo?.uploadUrl) {
+        <video
+          [src]="titleVideo?.uploadUrl"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
+      }
+
+      @if (titleVideo?.sourceType === 'external' && titleVideo?.safeUrl) {
+        <iframe
+          [src]="titleVideo?.safeUrl"
+          [title]="titleVideo?.name"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      }
     </div>
   </div>
 
   <div class="title-video-info">
-    <span class="video-name">"Run This Town" </span>| Detroit Red Wings
+    <span class="video-name">{{ titleVideo?.name }}</span>
+    | {{ titleVideo?.description }}
   </div>
 
   <button class="chevron-container" type="button" (click)="scrollDown()">
@@ -21,96 +35,93 @@
   </button>
 </div>
 
-<div #infoPanel class="info-container" >
-
+<div #infoPanel class="info-container">
   <div class="info-quote">
-    Motion That Drives Momentum
+    {{ headQuote }}
   </div>
 
   <div class="info-content">
-      I build premium sports venue graphic packages that help teams and brands stand out on the big screen and beyond.
-    <br><br>
-      I collaborate with leading sports organizations to craft next-level production, post-production, and motion design that captures energy, intensity, and identity.
+    @for (p of headParagraphs; track $index) {
+      <p>{{ p.text }}</p>
+    }
   </div>
-
 </div>
 
-<section #fadeItem class="scroll-stack fade-in">
+<section class="scroll-stack">
   <div class="stack-stage" #stackStage>
     <div class="stack-sticky">
-      <div class="scroll-stack-card" #stackCard>
-        <div class="card-video">
-          <iframe
-            title="Project One video"
-            src="https://player.vimeo.com/video/1089394686?h=355894d260&background=1&autoplay=1&loop=1&muted=1"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            allowfullscreen>
-          </iframe>
-        </div>
+      @for (video of homeVideoStack; track video.name) {
+        <div class="scroll-stack-card" #stackCard>
+          <div class="card-video">
+            @if (video.sourceType === 'upload' && video.uploadUrl) {
+              <video
+                [src]="video.uploadUrl"
+                autoplay
+                muted
+                loop
+                playsinline
+              ></video>
+            }
 
-        <div class="card-content">
-          <h2>Project One</h2>
-          <p>/ Interactive visualization / graphics work</p>
-        </div>
-      </div>
+            @if (video.sourceType === 'external' && video.safeUrl) {
+              <iframe
+                [src]="video.safeUrl"
+                [title]="video.name"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            }
+          </div>
 
-      <div class="scroll-stack-card" #stackCard>
-        <div class="card-video">
-          <iframe title="Project Two video"
-           src="https://player.vimeo.com/video/937050466?h=4e30c4a2ec&background=1&autoplay=1&loop=1&muted=1" 
-           frameborder="0"
-           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-           allowfullscreen>
-          </iframe>
+          <div class="card-content">
+            <h2>{{ video.name }}</h2>
+            <p>/ {{ video.description }}</p>
+          </div>
         </div>
-
-        <div class="card-content">
-          <h2>Project Two</h2>
-          <p>/ AI / simulation system</p>
-        </div>
-      </div>
-
-      <div class="scroll-stack-card" #stackCard>
-        <div class="card-video">
-          <iframe
-            title="Project Three video"
-            src="https://player.vimeo.com/video/1089394686?h=355894d260&background=1&autoplay=1&loop=1&muted=1"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            allowfullscreen>
-          </iframe>
-        </div>
-
-        <div class="card-content">
-          <h2>Project Three</h2>
-          <p>/ Full-stack / data platform</p>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </section>
 
 <div #fadeItem class="work-container fade-in">
   <span #headerEl class="header">GFX Work</span>
-  <div class="work-line"></div>
-  <div class="work-card">
-    <div class="work-card-visual carolina"></div>
-    <div class="work-card-name">Carolina Hurricanes '25</div>
-  </div>
-  <div class="work-line"></div>
-  <div class="work-card">
-    <div class="work-card-visual red-wings"></div>
-    <div class="work-card-name">Detroit Red Wings '24</div>
-  </div>
-  <div class="work-line"></div>
-  <div class="work-card">
-    <div class="work-card-visual checkers"></div>
-    <div class="work-card-name">Charlotte Checkers '22</div>
-  </div>
+
+  @for (work of gfxWorkSection; track work.video.name) {
+    <div class="work-line"></div>
+
+    <a class="work-card" [routerLink]="work.route">
+      <div class="work-card-visual">
+        @if (work.video.sourceType === 'upload' && work.video.uploadUrl) {
+          <video
+            class="work-card-video"
+            [src]="work.video.uploadUrl"
+            autoplay
+            muted
+            loop
+            playsinline>
+          </video>
+        }
+
+        @if (work.video.sourceType === 'external' && work.video.safeUrl) {
+          <iframe
+            class="work-card-video"
+            [src]="work.video.safeUrl"
+            [title]="work.video.name"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        }
+      </div>
+
+      <div class="work-card-name">{{ work.video.name }}</div>
+    </a>
+  }
+
   <div class="work-line"></div>
 
-  <button routerLink="/gfx-work" class="my-button"> 
+  <button routerLink="/gfx-work" class="my-button">
     <span>More Projects</span>
   </button>
 </div>
@@ -120,20 +131,24 @@
   <div class="partners-banner">
     <div class="carousel">
       <div class="group">
-        <div class="card carolina"></div>
-        <div class="card red-wings"></div>
-        <div class="card tigers"></div>
-        <div class="card maple-leafs"></div>
-        <div class="card checkers"></div>
-        <div class="card carolina-panthers"></div>
+        @for (partner of partneredClientsSection; track partner.client) {
+          <div class="card">
+            <img [src]="partner.img?.asset?.url"                 
+                 [alt]="partner.client"
+                 class="card-img"
+            >
+          </div>
+        }
       </div>
       <div aria-hidden class="group">
-        <div class="card carolina"></div>
-        <div class="card red-wings"></div>
-        <div class="card tigers"></div>
-        <div class="card maple-leafs"></div>
-        <div class="card checkers"></div>
-        <div class="card carolina-panthers"></div>
+        @for (partner of partneredClientsSection; track partner.client) {
+          <div class="card">
+            <img [src]="partner.img?.asset?.url"                 
+                 [alt]="partner.client"
+                 class="card-img"
+            >
+          </div>
+        }
       </div>
     </div>
   </div>

@@ -5,3 +5,8 @@ Open code in dev container and then run:
 ```
 npm start -- --host 0.0.0.0 --port 4200 --disable-host-check
 ```
+
+To run sanity, navigate to studio-gm-motion folder and run
+```
+npm run dev -- --host 0.0.0.0
+```
