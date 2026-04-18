@@ -36,7 +36,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   private nameObserver!: IntersectionObserver;
   private fadeItemsSub?: Subscription;
 
-  headshot = '';
+  headshot = '/assets/about/headshot.webp';
   aboutInfoParagraphs: Paragraph[] = [];
   headshotAlt = '';
 

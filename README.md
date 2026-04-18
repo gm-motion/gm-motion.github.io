@@ -10,3 +10,12 @@ To run sanity, navigate to studio-gm-motion folder and run
 ```
 npm run dev -- --host 0.0.0.0
 ```
+
+To edit from Sanity Studio:
+```
+https://gm-motion.sanity.studio/
+```
+To manage Sanity Studio account:
+```
+https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU
+```
