@@ -14,17 +14,12 @@
           <span #nameElement class="name-header-element">Gavin Morris</span>.
         </span>
       </span>
-      <p>
-      I'm a Senior Motion Graphics Designer with the Carolina Hurricanes, bringing over five years of experience in the sports motion industry.
-      My work is fast, powerful, and built to deliver impact where it matters most.
-      </p>
-      <p>
-      Outside of work, I'm a travel enthusiast and sports fan. I enjoy quality time with family, discovering new movies and shows, 
-      listening to EDM, and getting out on the ice. 
-      </p>
+      @for (p of aboutInfoParagraphs; track $index) {
+        <p>{{p.text}}</p>
+      }
     </div>
     <div class="about-info-img-container">
-      <img src="assets/about/headshot.webp" alt="Headshot Photo" width="1000" height="1000" loading="eager">
+      <img [src]="headshot" [alt]="headshotAlt" width="1000" height="1000" loading="eager">
     </div>
   </div>
 </div>
@@ -37,12 +32,12 @@
 <div #fadeItem class="timeline-box">
   <div class="timeline"></div>
 
-  @for (item of timelineItems; track item; let i = $index) {
+  @for (item of timelineItems; track item.company; let i = $index) {
     <div
       #fadeItem
       class="timeline-group"
-      [class.group-left]="item.side === 'left'"
-      [class.group-right]="item.side === 'right'"
+      [class.group-left]="i % 2 === 0"
+      [class.group-right]="i % 2 === 1"
     >
       <div #fadeItem class="timeline-row fade-in">
         <div class="timeline-side timeline-side-left">
@@ -52,7 +47,7 @@
         </div>
 
         <div class="timeline-logo">
-          <img [src]="item.logo" [alt]="item.company" />
+          <img [src]="item.logo?.asset?.url" [alt]="item.logo?.alt || item.company" />
         </div>
 
         <div class="timeline-side timeline-side-right">
@@ -64,12 +59,13 @@
 
       <div class="timeline-expand">
         <div class="timeline-expand-inner">
-          @for (milestone of item.milestones; track milestone) {
+          @for (milestone of item.milestones; track milestone.title) {
             <div #fadeItem class="fade-in">
-              <div
-                class="milestone-row"
-                [class.milestone-parent-left]="item.side === 'left'"
-                [class.milestone-parent-right]="item.side === 'right'"
+              <a
+                class="milestone-row milestone-button"
+                [class.milestone-parent-left]="i % 2 === 0"
+                [class.milestone-parent-right]="i % 2 === 1"
+                [routerLink]="milestone.route"
               >
                 <div class="milestone-date-card">
                   {{ milestone.date }}
@@ -78,12 +74,14 @@
                 <div class="milestone-dot"></div>
 
                 <div class="milestone-content">
-                  <div class="milestone-title">{{ milestone.title }}</div>
+                  <div class="milestone-title">
+                    {{ milestone.title }}
+                  </div>
                   <div class="milestone-description">
                     {{ milestone.description }}
                   </div>
                 </div>
-              </div>
+              </a>
             </div>
           }
         </div>

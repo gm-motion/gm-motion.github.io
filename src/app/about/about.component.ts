@@ -1,37 +1,32 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-
+import { SanityContentService } from '../core/sanity/sanity-content.service';
 import {
   AfterViewInit,
   OnInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Injector,
   OnDestroy,
   QueryList,
-  signal,
   ViewChild,
-  WritableSignal,
   ViewChildren,
-  effect,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-
-export interface AboutSections {
-  name: string;
-  paragraph: string;
-}
+import {TimelineItem} from '../core/sanity/schemas/aboutPage';
+import {Paragraph} from '../core/sanity/schemas/commonSchemas';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   standalone: true,
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AboutComponent implements AfterViewInit, OnDestroy {
+export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('headerEl') headerElements!: QueryList<ElementRef>;
   @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
   @ViewChild('nameElement') nameElement!: ElementRef<HTMLElement>;
@@ -41,75 +36,43 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
   private nameObserver!: IntersectionObserver;
   private fadeItemsSub?: Subscription;
 
-  timelineItems = [
-    {
-      company: 'Carolina Hurricanes',
-      title: 'Senior Motion Graphics Designer',
-      date: "Dec'24 - Present",
-      logo: 'assets/home/clients/hurricanes.webp',
-      side: 'left',
-      milestones: [
-        {
-          date: "May'25",
-          title: 'Eastern Conference Finals',
-          description: 'Hurricanes make the ECF again ',
-        },
-        {
-          date: "Jan'25",
-          title: 'Eric Staal Jersey Retirement',
-          description:
-            'Designed a full motion package for Eric Staal`s jersey retirement.',
-        },
-      ],
-    },
-    {
-      company: 'Detroit Red Wings',
-      title: 'Motion Graphics Artist',
-      date: "Sep'23 - Dec'24",
-      logo: 'assets/home/clients/red-wings.webp',
-      side: 'right',
-      milestones: [
-        {
-          date: "Nov'24",
-          title: 'Milestone One',
-          description: 'Description of something that occurred.',
-        },
-        {
-          date: "Feb'23",
-          title: 'Milestone Two',
-          description: 'Description of something that occurred.',
-        },
-      ],
-    },
-    {
-      company: 'Detroit Tigers',
-      title: 'Motion Graphics Artist',
-      date: "Sep'23 - Dec'24",
-      logo: 'assets/home/clients/tigers.webp',
-      side: 'left',
-      milestones: [
-        {
-          date: "Jul'24",
-          title: 'Tigers Clinch Playoffs',
-          description: 'Description of graphics that were animated',
-        },
-      ],
-    },
-    {
-      company: 'Charlotte Checkers',
-      title: 'Motion Graphics Designer',
-      date: "Oct'21 - Oct'23",
-      logo: 'assets/home/clients/checkers.webp',
-      side: 'right',
-      milestones: [
-        {
-          date: "Jan'26",
-          title: 'Project One',
-          description: 'Description here.',
-        },
-      ],
-    },
-  ];
+  headshot = '';
+  aboutInfoParagraphs: Paragraph[] = [];
+  headshotAlt = '';
+
+  timelineItems: TimelineItem[] = [];
+
+  constructor(
+    private sanityContentService: SanityContentService,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    try {
+      const aboutData = await this.sanityContentService.getAboutPage();
+
+      if (aboutData?.headshot?.asset?.url) {
+        this.headshot = aboutData.headshot.asset.url;
+      }
+
+      if (aboutData?.headshot?.alt) {
+        this.headshotAlt = aboutData.headshot.alt;
+      }
+
+      if (aboutData?.aboutInfoParagraphs?.length) {
+        this.aboutInfoParagraphs = [...aboutData.aboutInfoParagraphs];
+      }
+
+      if (aboutData?.timelineItems?.length) {
+        this.timelineItems = [...aboutData.timelineItems];
+        console.log(this.timelineItems);
+      }
+
+      this.cdr.markForCheck();
+    } catch (error) {
+      console.error('Failed to load About Schema from Sanity:', error);
+    }
+  }
 
   ngAfterViewInit() {
     this.headerObserver = new IntersectionObserver((entries) => {
