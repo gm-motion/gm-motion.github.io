@@ -10,43 +10,55 @@
 </div>
 
 <div #fadeItem class="gfx-card-container fade-in">
-    @for (row of gfxWorkRows; track $index) {
+  @for (row of gfxWorkRows; track $index) {
     <div class="gfx-card-row">
-        @for (card of row; track card.video.name) {
-        <a class="gfx-card" [routerLink]="card.route">
-            <div class="gfx-card-visual">
-            @if (card.video.sourceType === 'external' && card.safeUrl) {
+      @for (card of row; track $index) {
+        <a
+          class="gfx-card"
+          [class.gfx-card-loading]="isGfxLoading || !card.video.name"
+          [routerLink]="isGfxLoading ? null : card.route"
+          [attr.aria-disabled]="isGfxLoading"
+        >
+          <div class="gfx-card-visual">
+            @if (!isGfxLoading && card.video.name) {
+              @if (card.video.sourceType === 'external' && card.safeUrl) {
                 <iframe
-                class="gfx-card-video"
-                [src]="card.safeUrl"
-                [title]="card.video.name"
-                frameborder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowfullscreen>
+                  class="gfx-card-video"
+                  [src]="card.safeUrl"
+                  [title]="card.video.name"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen>
                 </iframe>
-            } @else if (card.video.sourceType === 'upload' && card.uploadUrl) {
+              } @else if (card.video.sourceType === 'upload' && card.uploadUrl) {
                 <video
-                class="gfx-card-video"
-                [src]="card.uploadUrl"
-                [attr.aria-label]="card.video.name"
-                autoplay
-                muted
-                loop
-                playsinline>
+                  class="gfx-card-video"
+                  [src]="card.uploadUrl"
+                  [attr.aria-label]="card.video.name"
+                  autoplay
+                  muted
+                  loop
+                  playsinline>
                 </video>
+              }
+            } @else {
+              <div class="gfx-card-skeleton-media"></div>
             }
-            </div>
+          </div>
 
+          @if (!isGfxLoading && card.video.name) {
             <span class="gfx-card-name">{{ card.video.name }}</span>
+          } @else {
+            <span class="gfx-card-skeleton-text"></span>
+          }
         </a>
-        }
+      }
     </div>
-    }
+  }
 
-
-    <button routerLink="/contact" class="my-button">
-        <span>Add Your Team!</span>
-    </button>
+  <button routerLink="/contact" class="my-button">
+    <span>Add Your Team!</span>
+  </button>
 </div>
 
 

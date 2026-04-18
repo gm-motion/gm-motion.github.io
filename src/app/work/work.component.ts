@@ -36,12 +36,27 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
   photoVideoMedia: PhotoMediaItem[] = [];
 
   photoVideoRows: { name: string; img: string }[][] = [];
-  gfxWorkRows: GfxCard[][] = [];
+  isGfxLoading = true;
+
+  gfxWorkRows: GfxCard[][] = Array.from({ length: 2 }, () =>
+    Array.from({ length: 3 }, () => ({
+      route: '/',
+      safeUrl: '',
+      uploadUrl: '',
+      video: {
+        name: '',
+        sourceType: 'upload',
+        uploadUrl: '',
+        safeUrl: '',
+        description: '',
+      },
+    })),
+  );
 
   constructor(
-      private sanitizer: DomSanitizer,
-      private sanityContentService: SanityContentService,
-      private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
+    private sanityContentService: SanityContentService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -59,6 +74,7 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
       if (workPageData?.gfxWorkMedia?.length) {
         this.gfxWorkMedia = [...workPageData.gfxWorkMedia];
         this.gfxWorkRows = this.buildGfxRows(this.gfxWorkMedia);
+        this.isGfxLoading = false;
       }
 
       if (workPageData?.photoVideoMedia?.length) {
@@ -135,12 +151,13 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
         return {
           route: item.route,
           video: item.video,
-          safeUrl: rawUrl ?
-              this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl) :
-              undefined,
-          uploadUrl: item.video.sourceType === 'upload' ?
-              item.video.videoFile?.asset?.url || '' :
-              undefined,
+          safeUrl: rawUrl
+            ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl)
+            : undefined,
+          uploadUrl:
+            item.video.sourceType === 'upload'
+              ? item.video.videoFile?.asset?.url || ''
+              : undefined,
         };
       });
 
@@ -164,7 +181,8 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
     const hash = match[2] || '';
 
     return `https://player.vimeo.com/video/${id}${
-        hash}&background=1&autoplay=1&loop=1&muted=1`;
+      hash
+    }&background=1&autoplay=1&loop=1&muted=1`;
   }
 
   ngOnDestroy(): void {

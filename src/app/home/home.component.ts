@@ -27,7 +27,7 @@ interface ResolvedVideoItem {
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('headerEl') headerElements!: QueryList<ElementRef<HTMLElement>>;
   @ViewChildren('stackCard') stackCards!: QueryList<ElementRef<HTMLElement>>;
-  @ViewChild('stackStage', {static: false})
+  @ViewChild('stackStage', { static: false })
   stackStage!: ElementRef<HTMLElement>;
   @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
 
@@ -35,7 +35,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private fadeItemsSub?: Subscription;
   private headerObserver?: IntersectionObserver;
 
-  homeVideoStack: ResolvedVideoSource[] = [];
+  homeVideoStack: ResolvedVideoSource[] = Array.from({ length: 3 }, () => ({
+    name: '',
+    description: '',
+    sourceType: 'external', // or 'external', doesn't matter as long as consistent
+    uploadUrl: '', // prevents video render
+    safeUrl: '', // prevents iframe render
+  }));
   titleVideo?: ResolvedVideoSource;
 
   headQuote = '';
@@ -45,14 +51,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   partneredClientsSection: PartneredClientItem[] = [];
 
   constructor(
-      private sanitizer: DomSanitizer,
-      private sanityContentService: SanityContentService,
-      private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
+    private sanityContentService: SanityContentService,
+    private cdr: ChangeDetectorRef,
   ) {}
   async ngOnInit(): Promise<void> {
     try {
-      const homePageData: HomeData|null =
-          await this.sanityContentService.getHomePage();
+      const homePageData: HomeData | null =
+        await this.sanityContentService.getHomePage();
 
       if (homePageData?.titleVideo) {
         this.titleVideo = this.resolveVideoSource(homePageData.titleVideo);
@@ -67,15 +73,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       if (homePageData?.videoStack?.length) {
-        this.homeVideoStack = homePageData.videoStack.map(
-            (video) => this.resolveVideoSource(video),
+        this.homeVideoStack = homePageData.videoStack.map((video) =>
+          this.resolveVideoSource(video),
         );
         console.log(this.homeVideoStack);
       }
 
       if (homePageData?.gfxWorkSection?.length) {
-        this.gfxWorkSection = homePageData.gfxWorkSection.map(
-            (item) => this.resolveVideoItem(item),
+        this.gfxWorkSection = homePageData.gfxWorkSection.map((item) =>
+          this.resolveVideoItem(item),
         );
       }
 
@@ -85,6 +91,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
       }
 
+      requestAnimationFrame(() => {
+        this.updateStackCards();
+      });
+
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Failed to load Home Page Schema from Sanity:', error);
@@ -92,6 +102,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.updateStackCards();
     const headerObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -100,21 +111,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    this.headerElements.forEach(
-        (header) => headerObserver.observe(header.nativeElement),
+    this.headerElements.forEach((header) =>
+      headerObserver.observe(header.nativeElement),
     );
     this.fadeObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              this.fadeObserver.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.1,
-        },
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            this.fadeObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+      },
     );
 
     this.observeFadeItems();
@@ -122,7 +133,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
       this.observeFadeItems();
     });
-    this.updateStackCards();
   }
 
   private observeFadeItems(): void {
@@ -134,8 +144,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-
-
 
   private resolveVideoSource(video: VideoSource): ResolvedVideoSource {
     let rawUrl = '';
@@ -152,11 +160,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return {
       ...video,
-      safeUrl: rawUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl) :
-                        undefined,
-      uploadUrl: video.sourceType === 'upload' ?
-          video.videoFile?.asset?.url || '' :
-          undefined,
+      safeUrl: rawUrl
+        ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl)
+        : undefined,
+      uploadUrl:
+        video.sourceType === 'upload'
+          ? video.videoFile?.asset?.url || ''
+          : undefined,
     };
   }
 
@@ -168,9 +178,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private buildVimeoEmbed(url: string): string {
-    const match = url.match(
-        /vimeo\.com\/(?:video\/)?(\d+)(\?h=[a-zA-Z0-9]+)?/,
-    );
+    const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)(\?h=[a-zA-Z0-9]+)?/);
 
     if (!match) return '';
 
@@ -178,7 +186,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const hash = match[2] || '';
 
     return `https://player.vimeo.com/video/${id}${
-        hash}&background=1&autoplay=1&loop=1&muted=1`;
+      hash
+    }&background=1&autoplay=1&loop=1&muted=1`;
   }
 
   @HostListener('window:scroll')
@@ -204,7 +213,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateStackCards(): void {
-    if (this.isMobile()) return;  // skip animation on mobile
+    if (this.isMobile()) return; // skip animation on mobile
     if (!this.stackCards?.length || !this.stackStage) return;
 
     const vh = window.innerHeight;
@@ -213,9 +222,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const collapsedHeight = Math.max(120, vh * 0.25);
     const expandedHeight = (vw * 0.9 * 9) / 16;
 
-    const growDistance = vh * 0.9;    // was 1.5
-    const holdDistance = vh * 0.4;    // was 1.2
-    const shrinkDistance = vh * 0.9;  // was 1.5
+    const growDistance = vh * 0.9; // was 1.5
+    const holdDistance = vh * 0.4; // was 1.2
+    const shrinkDistance = vh * 0.9; // was 1.5
     const cycleDistance = growDistance + holdDistance + shrinkDistance;
 
     const cardCount = this.stackCards.length;
@@ -228,8 +237,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const scrolled = this.clamp(-stageRect.top, 0, maxScroll);
 
     const baseIndex = Math.min(
-        cardCount - 1,
-        Math.floor(scrolled / cycleDistance),
+      cardCount - 1,
+      Math.floor(scrolled / cycleDistance),
     );
     const localScroll = scrolled - baseIndex * cycleDistance;
 
@@ -246,7 +255,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const heights: number[] = new Array(cardCount).fill(collapsedHeight);
     heights[baseIndex] = this.lerp(collapsedHeight, expandedHeight, t);
 
-    const gap = 16;  // 1rem in px
+    const gap = 16; // 1rem in px
 
     const buildLayout = (centerIndex: number): number[] => {
       const tops = new Array(cardCount).fill(0);
@@ -272,7 +281,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (localScroll > handoffStart) {
         const mix = this.smoothstep(
-            this.clamp((localScroll - handoffStart) / handoffDistance, 0, 1),
+          this.clamp((localScroll - handoffStart) / handoffDistance, 0, 1),
         );
 
         const nextTops = buildLayout(baseIndex + 1);
@@ -284,8 +293,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const card = cardRef.nativeElement;
 
       card.style.height = `${Math.round(heights[i])}px`;
-      card.style.top =
-          `${tops[i]}px`;  // no rounding — let the browser sub-pixel render
+      card.style.top = `${tops[i]}px`; // no rounding — let the browser sub-pixel render
       card.style.left = '50%';
       card.style.transform = 'translateX(-50%) translateZ(0)';
 
