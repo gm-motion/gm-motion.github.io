@@ -1,78 +1,18 @@
 import {
   Component,
-  OnDestroy,
-  AfterViewInit,
-  ViewChildren,
-  ElementRef,
-  QueryList,
   signal,
 } from '@angular/core';
 import emailjs from 'emailjs-com';
-import { Subscription } from 'rxjs';
+import { FadeInDirective } from '../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 
 @Component({
   selector: 'app-contact',
-  imports: [],
+  imports: [FadeInDirective, HeaderAnimationDirective],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css',
 })
-export class ContactComponent implements OnDestroy, AfterViewInit {
-  @ViewChildren('headerEl') headerElements!: QueryList<ElementRef>;
-  @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
-
-  private fadeObserver!: IntersectionObserver;
-  private headerObserver!: IntersectionObserver;
-  private fadeItemsSub?: Subscription;
-
-  ngAfterViewInit() {
-    this.headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    });
-
-    this.headerElements.forEach((el) =>
-      this.headerObserver.observe(el.nativeElement),
-    );
-
-    this.fadeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            this.fadeObserver.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    this.observeFadeItems();
-
-    this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
-      this.observeFadeItems();
-    });
-  }
-
-  private observeFadeItems(): void {
-    this.fadeItems.forEach((item) => {
-      const el = item.nativeElement;
-
-      if (!el.classList.contains('visible')) {
-        this.fadeObserver.observe(el);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.fadeObserver?.disconnect();
-    this.headerObserver?.disconnect();
-    this.fadeItemsSub?.unsubscribe();
-  }
+export class ContactComponent {
 
   showSubmissionOverlay = signal(false);
   sendEmailTriggered = signal(false);

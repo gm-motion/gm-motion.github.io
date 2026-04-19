@@ -5,15 +5,14 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnDestroy,
   OnInit,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
-
+import { RouterLink } from '@angular/router';
+import { FadeInDirective } from '../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
 import { VideoItem, VideoSource } from '../core/models/sanity/commonSchemas';
 import { PhotoMediaItem } from '../core/models/sanity/workPage';
@@ -29,21 +28,15 @@ interface GfxCard {
 
 @Component({
   selector: 'app-work',
-  imports: [RouterLink],
+  imports: [RouterLink, FadeInDirective, HeaderAnimationDirective],
   templateUrl: './work.component.html',
   styleUrls: ['./work.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChildren('headerEl') headerElements!: QueryList<ElementRef>;
-  @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
+export class WorkComponent implements OnInit, AfterViewInit {
   @ViewChildren('videoFrame') videoFrames!: QueryList<
     ElementRef<HTMLIFrameElement>
   >;
-
-  private fadeObserver!: IntersectionObserver;
-  private fadeItemsSub?: Subscription;
-  private headerObserver!: IntersectionObserver;
 
   private videos: { iframe: HTMLIFrameElement; provider: VideoProvider }[] = [];
 
@@ -106,38 +99,6 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    });
-
-    this.headerElements.forEach((el) =>
-      this.headerObserver.observe(el.nativeElement),
-    );
-
-    this.fadeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            this.fadeObserver.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    this.observeFadeItems();
-
-    this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
-      this.observeFadeItems();
-    });
-
     this.videos = this.videoFrames
       .toArray()
       .map((frameRef, i) => {
@@ -155,16 +116,6 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.videoPlayer.retryAllVideos(this.videos, 250);
     this.videoPlayer.retryAllVideos(this.videos, 500);
-  }
-
-  private observeFadeItems(): void {
-    this.fadeItems.forEach((item) => {
-      const el = item.nativeElement;
-
-      if (!el.classList.contains('visible')) {
-        this.fadeObserver.observe(el);
-      }
-    });
   }
 
   private buildGfxRows(items: VideoItem[], size: number = 3): GfxCard[][] {
@@ -207,11 +158,5 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('window:resize')
   onViewportChange(): void {
     this.videoPlayer.retryAllVideos(this.videos, 250);
-  }
-
-  ngOnDestroy(): void {
-    this.fadeObserver?.disconnect();
-    this.headerObserver?.disconnect();
-    this.fadeItemsSub?.unsubscribe();
   }
 }

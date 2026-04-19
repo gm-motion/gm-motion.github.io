@@ -1,4 +1,3 @@
-import { AsyncPipe, NgClass } from '@angular/common';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
 import {
   AfterViewInit,
@@ -6,35 +5,29 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  QueryList,
   ViewChild,
-  ViewChildren,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
 import { TimelineItem } from '../core/models/sanity/aboutPage';
 import { Paragraph } from '../core/models/sanity/commonSchemas';
 import { RouterLink } from '@angular/router';
+import { FadeInDirective } from '../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FadeInDirective, HeaderAnimationDirective],
   standalone: true,
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren('headerEl') headerElements!: QueryList<ElementRef>;
-  @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
   @ViewChild('nameElement') nameElement!: ElementRef<HTMLElement>;
 
-  private fadeObserver!: IntersectionObserver;
-  private headerObserver!: IntersectionObserver;
   private nameObserver!: IntersectionObserver;
-  private fadeItemsSub?: Subscription;
 
   headshot = '/assets/about/headshot.webp';
   aboutInfoParagraphs: Paragraph[] = [];
@@ -75,38 +68,6 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    });
-
-    this.headerElements.forEach((header) =>
-      this.headerObserver.observe(header.nativeElement),
-    );
-
-    this.fadeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            this.fadeObserver.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    this.observeFadeItems();
-
-    this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
-      this.observeFadeItems();
-    });
-
     this.nameObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -121,25 +82,10 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     );
 
-    console.log(this.nameElement);
-
     this.nameObserver.observe(this.nameElement.nativeElement);
   }
 
-  private observeFadeItems(): void {
-    this.fadeItems.forEach((item) => {
-      const el = item.nativeElement;
-
-      if (!el.classList.contains('visible')) {
-        this.fadeObserver.observe(el);
-      }
-    });
-  }
-
   ngOnDestroy(): void {
-    this.fadeObserver?.disconnect();
-    this.headerObserver?.disconnect();
     this.nameObserver?.disconnect();
-    this.fadeItemsSub?.unsubscribe();
   }
 }

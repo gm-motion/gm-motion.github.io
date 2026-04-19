@@ -1,7 +1,7 @@
 <div class="spacer"></div>
 
-<div #fadeItem class="gfx-title-container fade-in" >
-    <span #headerEl class="header">GFX Work</span>
+<div fadeIn class="gfx-title-container fade-in" >
+    <span headerAnimation class="header">GFX Work</span>
     <div class="gfx-info">
         <span>{{gfxSubHeader}}</span>
 
@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div #fadeItem class="gfx-card-container fade-in">
+<div fadeIn class="gfx-card-container fade-in">
   @for (row of gfxWorkRows; track $index) {
     <div class="gfx-card-row">
       @for (card of row; track $index) {
@@ -64,14 +64,14 @@
 
 
 
-<div #fadeItem class="media-container fade-in">
-    <span #headerEl class="header">Photography + Video</span>
+<div fadeIn class="media-container fade-in">
+    <span headerAnimation class="header">Photography + Video</span>
     <div class="media-info">
         <div>{{photoVideoParagraph}}</div>
     </div>
 </div>
 
-<div #fadeItem class="media-card-container fade-in">
+<div fadeIn class="media-card-container fade-in">
   <div class="media-masonry">
     @for (card of photoVideoMedia; track card.name) {
       <div class="media-card">
