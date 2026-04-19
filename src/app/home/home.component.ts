@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('stackStage', { static: false })
   stackStage!: ElementRef<HTMLElement>;
   @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
+  @ViewChild('carousel') carousel?: ElementRef<HTMLElement>;
 
   private fadeObserver!: IntersectionObserver;
   private fadeItemsSub?: Subscription;
@@ -103,6 +104,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.updateStackCards();
+    setTimeout(() => this.restartCarouselAnimation(), 100);
+    setTimeout(() => this.restartCarouselAnimation(), 500);
     const headerObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -199,6 +202,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     params.set('playsinline', '1');
 
     return `https://player.vimeo.com/video/${id}?${params.toString()}`;
+  }
+
+  @HostListener('window:orientationchange')
+  @HostListener('window:resize')
+  onViewportChange(): void {
+    this.restartCarouselAnimation();
+  }
+
+  private restartCarouselAnimation(): void {
+    const el = this.carousel?.nativeElement;
+    if (!el) return;
+
+    el.style.animation = 'none';
+    void el.offsetWidth; // force reflow
+    el.style.animation = '';
   }
 
   @HostListener('window:scroll')
