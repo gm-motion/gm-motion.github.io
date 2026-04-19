@@ -153,6 +153,7 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
           item !== null,
       );
 
+    this.videoPlayer.retryAllVideos(this.videos, 250);
     this.videoPlayer.retryAllVideos(this.videos, 500);
   }
 
