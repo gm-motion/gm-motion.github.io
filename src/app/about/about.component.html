@@ -1,12 +1,12 @@
 <div class="spacer"></div>
 
 <div class="about-container">
-  <div #fadeItem class="header-container fade-in">
-    <span #headerEl class="header">About</span>
+  <div fadeIn class="header-container fade-in">
+    <span headerAnimation class="header">About</span>
   </div>
 
   <div class="about-info-container">
-    <div #fadeItem class="about-info-text fade-in">
+    <div fadeIn class="about-info-text fade-in">
       <span class="hello-header">Hello!</span>
       <span class="name-header">
         I'm 
@@ -24,22 +24,22 @@
   </div>
 </div>
 
-<div #fadeItem class="timeline-container fade-in">
-  <span #headerEl class="header">Timeline</span>
+<div  class="timeline-container fade-in">
+  <span headerAnimation class="header">Timeline</span>
   <div class="timeline-info">Scroll through the timeline to view my experiences.</div>
 </div>
 
-<div #fadeItem class="timeline-box">
+<div fadeIn class="timeline-box">
   <div class="timeline"></div>
 
   @for (item of timelineItems; track item.company; let i = $index) {
     <div
-      #fadeItem
+      fadeIn
       class="timeline-group"
       [class.group-left]="i % 2 === 0"
       [class.group-right]="i % 2 === 1"
     >
-      <div #fadeItem class="timeline-row fade-in">
+      <div fadeIn class="timeline-row fade-in">
         <div class="timeline-side timeline-side-left">
           <div class="timeline-date">
             {{ item.date }}
@@ -60,7 +60,7 @@
       <div class="timeline-expand">
         <div class="timeline-expand-inner">
           @for (milestone of item.milestones; track milestone.title) {
-            <div #fadeItem class="fade-in">
+            <div fadeIn class="fade-in">
               <a
                 class="milestone-row milestone-button"
                 [class.milestone-parent-left]="i % 2 === 0"

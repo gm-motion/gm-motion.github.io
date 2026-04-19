@@ -5,7 +5,6 @@ import {
   Component,
   ElementRef,
   HostListener,
-  OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
@@ -13,8 +12,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
-
+import { FadeInDirective } from '../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
 import {
   Paragraph,
@@ -37,17 +36,15 @@ interface ResolvedVideoItem {
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, FadeInDirective, HeaderAnimationDirective],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren('headerEl') headerElements!: QueryList<ElementRef<HTMLElement>>;
+export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChildren('stackCard') stackCards!: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('stackStage', { static: false })
   stackStage!: ElementRef<HTMLElement>;
-  @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
   @ViewChild('carousel') carousel?: ElementRef<HTMLElement>;
   @ViewChild('titleVideoFrame')
   titleVideoFrame!: ElementRef<HTMLIFrameElement>;
@@ -57,10 +54,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('workVideoFrame') workVideoFrames!: QueryList<
     ElementRef<HTMLIFrameElement>
   >;
-
-  private fadeObserver!: IntersectionObserver;
-  private fadeItemsSub?: Subscription;
-  private headerObserver?: IntersectionObserver;
 
   homeVideoStack: ResolvedVideoSource[] = Array.from({ length: 3 }, () => ({
     name: '',
@@ -83,6 +76,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private videoPlayer: VideoPlayerService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     try {
       const homePageData: HomeData | null =
@@ -132,53 +126,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.updateStackCards();
 
-    const headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    });
-
-    this.headerElements.forEach((header) =>
-      headerObserver.observe(header.nativeElement),
-    );
-    this.fadeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            this.fadeObserver.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    this.observeFadeItems();
-
-    this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
-      this.observeFadeItems();
-    });
-
     this.retryTitleVideo();
     this.retryStackVideos();
     this.retryWorkVideos();
 
     setTimeout(() => this.restartCarouselAnimation(), 100);
     setTimeout(() => this.restartCarouselAnimation(), 500);
-  }
-
-  private observeFadeItems(): void {
-    this.fadeItems.forEach((item) => {
-      const el = item.nativeElement;
-
-      if (!el.classList.contains('visible')) {
-        this.fadeObserver.observe(el);
-      }
-    });
   }
 
   private resolveVideoSource(video: VideoSource): ResolvedVideoSource {
@@ -437,10 +390,5 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.updateStackCards();
-  }
-
-  ngOnDestroy() {
-    this.fadeObserver?.disconnect();
-    this.headerObserver?.disconnect();
   }
 }
