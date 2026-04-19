@@ -217,6 +217,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   onViewportChange(): void {
     this.restartCarouselAnimation();
+    this.retryTitleVideo();
+    this.retryStackVideos();
+    this.retryWorkVideos();
   }
 
   private restartCarouselAnimation(): void {
