@@ -71,21 +71,19 @@
 </div>
 
 <div #fadeItem class="media-card-container fade-in">
-    @for (row of photoVideoRows; track $index) {
-    <div class="media-card-row">
-        @for (card of row; track card.name) {
-        <div class="media-card">
-            <div class="media-card-visual">
-            <img
-                [src]="card.img"
-                [alt]="card.name"
-                class="media-card-img"
-            />
-            </div>
+  <div class="media-masonry">
+    @for (card of photoVideoMedia; track card.name) {
+      <div class="media-card">
+        <div class="media-card-visual">
+          <img
+            [src]="card.img?.asset?.url"
+            [alt]="card.name"
+            class="media-card-img"
+          />
         </div>
-        }
-    </div>
+      </div>
     }
+  </div>
 
     <button routerLink="/contact" class="my-button">
         <span>Add Your Media!</span>

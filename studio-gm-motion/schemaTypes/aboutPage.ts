@@ -79,6 +79,8 @@ export default defineType({
               name: 'logo',
               title: 'Logo',
               type: 'image',
+              description:
+                '.webp preferred. Should be a white logo on transparent background for best results.',
               options: {
                 hotspot: true,
               },
@@ -120,8 +122,7 @@ export default defineType({
                       name: 'route',
                       title: 'Route',
                       type: 'string',
-                      description:
-                          'Project route (e.g. /gfx-work/{project-name})',
+                      description: 'Project route (e.g. /gfx-work/{project-name})',
                       validation: (Rule) => Rule.required(),
                     }),
                   ],
