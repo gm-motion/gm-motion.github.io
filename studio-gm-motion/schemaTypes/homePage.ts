@@ -104,6 +104,8 @@ export default defineType({
               name: 'img',
               title: 'Image',
               type: 'image',
+              description:
+                '.webp preferred. Should be a white logo on transparent background for best results.',
               options: {
                 hotspot: true,
               },

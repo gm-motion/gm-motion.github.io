@@ -21,6 +21,8 @@ export default defineType({
       name: 'logoLight',
       title: 'Logo (White)',
       type: 'image',
+      description:
+        '.svg preferred. Should be a white logo on transparent background for best results',
       options: {hotspot: true},
       fields: [
         defineField({
@@ -34,6 +36,8 @@ export default defineType({
       name: 'logoDark',
       title: 'Logo (Black)',
       type: 'image',
+      description:
+        '.svg preferred. Should be a black logo on transparent background for best results',
       options: {hotspot: true},
       fields: [
         defineField({
@@ -67,6 +71,8 @@ export default defineType({
               name: 'icon',
               title: 'Icon',
               type: 'image',
+              description:
+                '.svg preferred. Should be a white logo on transparent background for best results.',
               options: {hotspot: true},
               fields: [
                 defineField({

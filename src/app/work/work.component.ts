@@ -35,7 +35,6 @@ export class WorkComponent implements OnInit, OnDestroy, AfterViewInit {
   gfxWorkMedia: VideoItem[] = [];
   photoVideoMedia: PhotoMediaItem[] = [];
 
-  photoVideoRows: { name: string; img: string }[][] = [];
   isGfxLoading = true;
 
   gfxWorkRows: GfxCard[][] = Array.from({ length: 2 }, () =>

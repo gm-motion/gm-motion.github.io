@@ -1,7 +1,7 @@
 import { SanityImage, VideoItem } from './commonSchemas';
 
 export interface PhotoMediaItem {
-  img: SanityImage;
+  img?: SanityImage;
   name: string;
 }
 
