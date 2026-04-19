@@ -15,43 +15,74 @@
       @for (card of row; track $index) {
         <a
           class="gfx-card"
-          [class.gfx-card-loading]="isGfxLoading || !card.video.name"
+          [class.gfx-card-loading]="isGfxLoading || !card.media.video?.name"
           [routerLink]="isGfxLoading ? null : card.route"
           [attr.aria-disabled]="isGfxLoading"
         >
           <div class="gfx-card-visual">
-            @if (!isGfxLoading && card.video.name) {
-              @if (card.video.sourceType === 'external' && card.safeUrl) {
-                <iframe
-                  #videoFrame
-                  class="gfx-card-video"
-                  [src]="card.safeUrl"
-                  [title]="card.video.name"
-                  frameborder="0"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowfullscreen>
-                </iframe>
-              } @else if (card.video.sourceType === 'upload' && card.uploadUrl) {
-                <video
-                  class="gfx-card-video"
-                  [src]="card.uploadUrl"
-                  [attr.aria-label]="card.video.name"
-                  autoplay
-                  muted
-                  loop
-                  playsinline>
-                </video>
+
+            @if (!isGfxLoading) {
+
+              <!-- VIDEO -->
+              @if (card.media.mediaType === 'video' && card.media.video) {
+
+                @if (card.media.video.sourceType === 'external' && card.safeUrl) {
+                  <iframe
+                    #videoFrame
+                    class="gfx-card-media"
+                    [src]="card.safeUrl"
+                    [title]="card.media.video.name"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen>
+                  </iframe>
+
+                } @else if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
+                  <video
+                    class="gfx-card-media"
+                    [src]="card.uploadUrl"
+                    [attr.aria-label]="card.media.video.name"
+                    autoplay
+                    muted
+                    loop
+                    playsinline>
+                  </video>
+                }
+
               }
+
+              <!-- IMAGE -->
+              @else if (card.media.mediaType === 'image' && card.imageUrl) {
+                <img
+                  class="gfx-card-media"
+                  [src]="card.imageUrl"
+                  [alt]="card.media.alt || 'Work image'"
+                />
+              }
+
             } @else {
               <div class="gfx-card-skeleton-media"></div>
             }
+
           </div>
 
-          @if (!isGfxLoading && card.video.name) {
-            <span class="gfx-card-name">{{ card.video.name }}</span>
+          <!-- TITLE -->
+          @if (!isGfxLoading) {
+
+            @if (card.media.mediaType === 'video' && card.media.video?.name) {
+              <span class="gfx-card-name">
+                {{ card.media.video?.name }}
+              </span>
+            } @else if (card.media.mediaType === 'image') {
+              <span class="gfx-card-name">
+                {{ card.media.alt || 'Image' }}
+              </span>
+            }
+
           } @else {
             <span class="gfx-card-skeleton-text"></span>
           }
+
         </a>
       }
     </div>
@@ -77,7 +108,7 @@
       <div class="media-card">
         <div class="media-card-visual">
           <img
-            [src]="card.img?.asset?.url"
+            [src]="card.img.asset?.url"
             [alt]="card.name"
             class="media-card-img"
           />
