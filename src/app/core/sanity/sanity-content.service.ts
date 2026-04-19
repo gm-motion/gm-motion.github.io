@@ -1,11 +1,11 @@
 // src/app/core/sanity/sanity-content.service.ts
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {sanityClient} from './sanity.client';
-import {AboutData} from './schemas/aboutPage';
-import {HeaderFooterData} from './schemas/headerFooter';
-import {HomeData} from './schemas/homePage';
-import {WorkData} from './schemas/workPage';
+import { sanityClient } from './sanity.client';
+import { AboutData } from '../models/sanity/aboutPage';
+import { HeaderFooterData } from '../models/sanity/headerFooter';
+import { HomeData } from '../models/sanity/homePage';
+import { WorkData } from '../models/sanity/workPage';
 
 @Injectable({
   providedIn: 'root',
