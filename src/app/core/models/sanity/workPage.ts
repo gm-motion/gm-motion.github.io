@@ -1,13 +1,23 @@
-import { SanityImage, VideoItem } from './commonSchemas';
+import { MediaSource } from './commonSchemas';
 
-export interface PhotoMediaItem {
-  img?: SanityImage;
+export interface GfxWorkItem {
+  route: string;
+  media: MediaSource;
+}
+
+export interface PhotoVideoMediaItem {
   name: string;
+  img: {
+    asset?: {
+      url: string;
+    };
+    alt?: string;
+  };
 }
 
 export interface WorkData {
   gfxSubHeader?: string;
   photoVideoParagraph?: string;
-  gfxWorkMedia?: VideoItem[];
-  photoVideoMedia?: PhotoMediaItem[];
+  gfxWorkMedia?: GfxWorkItem[];
+  photoVideoMedia?: PhotoVideoMediaItem[];
 }

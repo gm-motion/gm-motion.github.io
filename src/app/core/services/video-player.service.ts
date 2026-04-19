@@ -110,6 +110,7 @@ export class VideoPlayerService {
     videos: { iframe: HTMLIFrameElement; provider: VideoProvider }[],
     delayMs = 0,
   ): Promise<void> {
+    if (!videos.length) return;
     window.setTimeout(async () => {
       for (const video of videos) {
         await this.retryVideo(video.iframe, video.provider);

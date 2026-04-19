@@ -1,10 +1,10 @@
 export interface SanityImageAsset {
-  url?: string
+  url?: string;
 }
 
 export interface SanityImage {
-  asset?: SanityImageAsset
-  alt?: string
+  asset?: SanityImageAsset;
+  alt?: string;
 }
 
 export interface Paragraph {
@@ -16,11 +16,27 @@ export interface VideoItem {
   route: string;
 }
 
+
+export interface MediaSource {
+  mediaType: 'video' | 'image';
+  alt?: string;
+  video?: VideoSource;
+  image?: {
+    asset?: {
+      url: string;
+    };
+  };
+}
+
 export interface VideoSource {
-  sourceType: 'external'|'upload';
-  provider?: 'vimeo'|'youtube'|'direct';
+  sourceType: 'external' | 'upload';
+  provider?: 'vimeo' | 'youtube' | 'direct';
   url?: string;
-  videoFile?: {asset?: {url: string;};};
   name: string;
   description?: string;
+  videoFile?: {
+    asset?: {
+      url: string;
+    };
+  };
 }

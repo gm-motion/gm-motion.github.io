@@ -15,15 +15,29 @@ import { FadeInDirective } from '../core/directives/fade-in.directive';
 import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
 import { VideoItem, VideoSource } from '../core/models/sanity/commonSchemas';
-import { PhotoMediaItem } from '../core/models/sanity/workPage';
+import { PhotoVideoMediaItem, GfxWorkItem } from '../core/models/sanity/workPage';
 import { VideoPlayerService } from '../core/services/video-player.service';
 import { VideoProvider } from '../core/models/video.types';
 
+interface MediaImage {
+  asset?: {
+    url?: string;
+  };
+}
+
+interface MediaSource {
+  mediaType: 'video' | 'image';
+  alt?: string;
+  video?: VideoSource;
+  image?: MediaImage;
+}
+
 interface GfxCard {
   route: string;
-  video: VideoSource;
+  media: MediaSource;
   safeUrl?: SafeResourceUrl;
   uploadUrl?: string;
+  imageUrl?: string;
 }
 
 @Component({
@@ -43,22 +57,26 @@ export class WorkComponent implements OnInit, AfterViewInit {
   gfxSubHeader = '';
   photoVideoParagraph = '';
 
-  gfxWorkMedia: VideoItem[] = [];
-  photoVideoMedia: PhotoMediaItem[] = [];
+  gfxWorkMedia: GfxWorkItem[] = [];
+  photoVideoMedia: PhotoVideoMediaItem[] = [];
 
   isGfxLoading = true;
 
   gfxWorkRows: GfxCard[][] = Array.from({ length: 2 }, () =>
     Array.from({ length: 3 }, () => ({
       route: '/',
-      safeUrl: '',
+      safeUrl: undefined,
       uploadUrl: '',
-      video: {
-        name: '',
-        sourceType: 'upload',
-        uploadUrl: '',
-        safeUrl: '',
-        description: '',
+      imageUrl: '',
+      media: {
+        mediaType: 'video',
+        video: {
+          name: '',
+          sourceType: 'upload',
+          uploadUrl: '',
+          safeUrl: '',
+          description: '',
+        },
       },
     })),
   );
@@ -86,6 +104,9 @@ export class WorkComponent implements OnInit, AfterViewInit {
         this.gfxWorkMedia = [...workPageData.gfxWorkMedia];
         this.gfxWorkRows = this.buildGfxRows(this.gfxWorkMedia);
         this.isGfxLoading = false;
+      } else {
+        this.gfxWorkRows = [];
+        this.isGfxLoading = false;
       }
 
       if (workPageData?.photoVideoMedia?.length) {
@@ -95,14 +116,25 @@ export class WorkComponent implements OnInit, AfterViewInit {
       this.cdr.markForCheck();
     } catch (error) {
       console.error('Failed to load Work Page Schema from Sanity:', error);
+      this.isGfxLoading = false;
+      this.cdr.markForCheck();
     }
   }
 
-  ngAfterViewInit() {
-    this.videos = this.videoFrames
-      .toArray()
+  ngAfterViewInit(): void {
+    const frames = this.videoFrames.toArray();
+    if (!frames.length) return;
+
+    const flatCards = this.gfxWorkRows.flat();
+
+    this.videos = frames
       .map((frameRef, i) => {
-        const provider = this.gfxWorkMedia[i]?.video?.provider;
+        const card = flatCards[i];
+        const provider =
+          card?.media?.mediaType === 'video'
+            ? card.media.video?.provider
+            : undefined;
+
         return provider === 'vimeo' || provider === 'youtube'
           ? { iframe: frameRef.nativeElement, provider }
           : null;
@@ -110,41 +142,57 @@ export class WorkComponent implements OnInit, AfterViewInit {
       .filter(
         (
           item,
-        ): item is { iframe: HTMLIFrameElement; provider: 'vimeo' | 'youtube' } =>
-          item !== null,
+        ): item is {
+          iframe: HTMLIFrameElement;
+          provider: 'vimeo' | 'youtube';
+        } => item !== null,
       );
 
     this.videoPlayer.retryAllVideos(this.videos, 250);
     this.videoPlayer.retryAllVideos(this.videos, 500);
   }
 
-  private buildGfxRows(items: VideoItem[], size: number = 3): GfxCard[][] {
+  private buildGfxRows(items: GfxWorkItem[], size: number = 3): GfxCard[][] {
     const rows: GfxCard[][] = [];
 
     for (let i = 0; i < items.length; i += size) {
       const chunk: GfxCard[] = items.slice(i, i + size).map((item) => {
         let rawUrl = '';
+        let uploadUrl: string | undefined;
+        let imageUrl: string | undefined;
 
-        if (item.video.sourceType === 'external') {
+        if (item.media.mediaType === 'video' && item.media.video) {
+          const video = item.media.video;
 
-          if ((item.video.provider === 'vimeo' || item.video.provider === 'youtube') && item.video.url ) {
-            rawUrl = this.videoPlayer.buildEmbedUrl(item.video.url, item.video.provider);
+          if (video.sourceType === 'external') {
+            if (
+              (video.provider === 'vimeo' || video.provider === 'youtube') &&
+              video.url
+            ) {
+              rawUrl = this.videoPlayer.buildEmbedUrl(
+                video.url,
+                video.provider,
+              );
+            } else if (video.provider === 'direct' && video.url) {
+              rawUrl = video.url;
+            }
+          } else if (video.sourceType === 'upload') {
+            uploadUrl = video.videoFile?.asset?.url || '';
           }
-          else if (item.video.provider === 'direct' && item.video.url) {
-            rawUrl = item.video.url;
-          }
+        }
+
+        if (item.media.mediaType === 'image') {
+          imageUrl = item.media.image?.asset?.url || '';
         }
 
         return {
           route: item.route,
-          video: item.video,
+          media: item.media,
           safeUrl: rawUrl
             ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl)
             : undefined,
-          uploadUrl:
-            item.video.sourceType === 'upload'
-              ? item.video.videoFile?.asset?.url || ''
-              : undefined,
+          uploadUrl,
+          imageUrl,
         };
       });
 
