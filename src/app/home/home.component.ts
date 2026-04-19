@@ -1,11 +1,29 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren,} from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {RouterLink} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import {SanityContentService} from '../core/sanity/sanity-content.service';
-import {Paragraph, VideoItem, VideoSource} from '../core/sanity/schemas/commonSchemas';
-import {HomeData, PartneredClientItem} from '../core/sanity/schemas/homePage';
+import { SanityContentService } from '../core/sanity/sanity-content.service';
+import {
+  Paragraph,
+  VideoItem,
+  VideoSource,
+} from '../core/models/sanity/commonSchemas';
+import { HomeData, PartneredClientItem } from '../core/models/sanity/homePage';
+import { VideoPlayerService } from '../core/services/video-player.service';
+import { VideoProvider } from '../core/models/video.types';
 
 interface ResolvedVideoSource extends VideoSource {
   safeUrl?: SafeResourceUrl;
@@ -31,6 +49,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   stackStage!: ElementRef<HTMLElement>;
   @ViewChildren('fadeItem') fadeItems!: QueryList<ElementRef>;
   @ViewChild('carousel') carousel?: ElementRef<HTMLElement>;
+  @ViewChild('titleVideoFrame')
+  titleVideoFrame!: ElementRef<HTMLIFrameElement>;
+  @ViewChildren('stackVideoFrame') stackVideoFrames!: QueryList<
+    ElementRef<HTMLIFrameElement>
+  >;
+  @ViewChildren('workVideoFrame') workVideoFrames!: QueryList<
+    ElementRef<HTMLIFrameElement>
+  >;
 
   private fadeObserver!: IntersectionObserver;
   private fadeItemsSub?: Subscription;
@@ -55,6 +81,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private sanityContentService: SanityContentService,
     private cdr: ChangeDetectorRef,
+    private videoPlayer: VideoPlayerService,
   ) {}
   async ngOnInit(): Promise<void> {
     try {
@@ -104,8 +131,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.updateStackCards();
-    setTimeout(() => this.restartCarouselAnimation(), 100);
-    setTimeout(() => this.restartCarouselAnimation(), 500);
+
     const headerObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -136,6 +162,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fadeItemsSub = this.fadeItems.changes.subscribe(() => {
       this.observeFadeItems();
     });
+
+    this.retryTitleVideo();
+    this.retryStackVideos();
+    this.retryWorkVideos();
+
+    setTimeout(() => this.restartCarouselAnimation(), 100);
+    setTimeout(() => this.restartCarouselAnimation(), 500);
   }
 
   private observeFadeItems(): void {
@@ -151,14 +184,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private resolveVideoSource(video: VideoSource): ResolvedVideoSource {
     let rawUrl = '';
 
-    if (video.sourceType === 'external' && video.url) {
-      if (video.provider === 'vimeo') {
-        rawUrl = this.buildVimeoEmbed(video.url);
-      } else if (video.provider === 'youtube') {
-        rawUrl = video.url;
-      } else if (video.provider === 'direct') {
-        rawUrl = video.url;
-      }
+    if (
+      video.sourceType === 'external' &&
+      video.url &&
+      (video.provider === 'vimeo' || video.provider === 'youtube')
+    ) {
+      rawUrl = this.videoPlayer.buildEmbedUrl(video.url, video.provider);
+    } else if (video.provider === 'direct' && video.url) {
+      rawUrl = video.url;
     }
 
     return {
@@ -180,30 +213,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  private buildVimeoEmbed(url: string): string {
-    const match = url.match(
-      /vimeo\.com\/(?:video\/)?(\d+)(?:\?h=([a-zA-Z0-9]+))?/,
-    );
-
-    if (!match) return '';
-
-    const id = match[1];
-    const hash = match[2];
-
-    const params = new URLSearchParams();
-
-    if (hash) params.set('h', hash);
-
-    params.set('background', '1');
-    params.set('autoplay', '1');
-    params.set('loop', '1');
-    params.set('muted', '1');
-    params.set('autopause', '0');
-    params.set('playsinline', '1');
-
-    return `https://player.vimeo.com/video/${id}?${params.toString()}`;
-  }
-
   @HostListener('window:orientationchange')
   @HostListener('window:resize')
   onViewportChange(): void {
@@ -214,9 +223,69 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const el = this.carousel?.nativeElement;
     if (!el) return;
 
-    el.style.animation = 'none';
-    void el.offsetWidth; // force reflow
-    el.style.animation = '';
+    this.videoPlayer.restartAnimation(el);
+  }
+
+  private isRetryableProvider(
+    provider: VideoProvider | 'direct' | undefined,
+  ): provider is VideoProvider {
+    return provider === 'vimeo' || provider === 'youtube';
+  }
+
+  private buildRetryGroup(
+    frames: QueryList<ElementRef<HTMLIFrameElement>>,
+    videos: { provider?: VideoProvider | 'direct' }[],
+  ): { iframe: HTMLIFrameElement; provider: VideoProvider }[] {
+    return frames
+      .toArray()
+      .map((frameRef, i) => {
+        const provider = videos[i]?.provider;
+
+        if (!this.isRetryableProvider(provider)) {
+          return null;
+        }
+
+        return {
+          iframe: frameRef.nativeElement,
+          provider,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is { iframe: HTMLIFrameElement; provider: VideoProvider } =>
+          item !== null,
+      );
+  }
+
+  private retryTitleVideo(): void {
+    const iframe = this.titleVideoFrame?.nativeElement;
+    const provider = this.titleVideo?.provider;
+
+    if (!iframe || !this.isRetryableProvider(provider)) return;
+
+    this.videoPlayer.retryAllVideos([{ iframe, provider }], 400);
+    this.videoPlayer.retryAllVideos([{ iframe, provider }], 1200);
+  }
+
+  private retryStackVideos(): void {
+    const videos = this.buildRetryGroup(
+      this.stackVideoFrames,
+      this.homeVideoStack,
+    );
+
+    this.videoPlayer.retryAllVideos(videos, 500);
+    this.videoPlayer.retryAllVideos(videos, 1300);
+  }
+
+  private retryWorkVideos(): void {
+    const videos = this.buildRetryGroup(
+      this.workVideoFrames,
+      this.gfxWorkSection.map((item) => item.video),
+    );
+
+    this.videoPlayer.retryAllVideos(videos, 500);
+    this.videoPlayer.retryAllVideos(videos, 1300);
   }
 
   @HostListener('window:scroll')

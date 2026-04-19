@@ -14,8 +14,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import {TimelineItem} from '../core/sanity/schemas/aboutPage';
-import {Paragraph} from '../core/sanity/schemas/commonSchemas';
+import { TimelineItem } from '../core/models/sanity/aboutPage';
+import { Paragraph } from '../core/models/sanity/commonSchemas';
 import { RouterLink } from '@angular/router';
 
 @Component({

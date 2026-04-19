@@ -23,7 +23,7 @@
             @if (!isGfxLoading && card.video.name) {
               @if (card.video.sourceType === 'external' && card.safeUrl) {
                 <iframe
-                  #vimeoFrame
+                  #videoFrame
                   class="gfx-card-video"
                   [src]="card.safeUrl"
                   [title]="card.video.name"
