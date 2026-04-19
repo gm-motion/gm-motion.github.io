@@ -178,16 +178,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private buildVimeoEmbed(url: string): string {
-    const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)(\?h=[a-zA-Z0-9]+)?/);
+    const match = url.match(
+      /vimeo\.com\/(?:video\/)?(\d+)(?:\?h=([a-zA-Z0-9]+))?/,
+    );
 
     if (!match) return '';
 
     const id = match[1];
-    const hash = match[2] || '';
+    const hash = match[2];
 
-    return `https://player.vimeo.com/video/${id}${
-      hash
-    }&background=1&autoplay=1&loop=1&muted=1`;
+    const params = new URLSearchParams();
+
+    if (hash) params.set('h', hash);
+
+    params.set('background', '1');
+    params.set('autoplay', '1');
+    params.set('loop', '1');
+    params.set('muted', '1');
+    params.set('autopause', '0');
+    params.set('playsinline', '1');
+
+    return `https://player.vimeo.com/video/${id}?${params.toString()}`;
   }
 
   @HostListener('window:scroll')
