@@ -62,7 +62,6 @@ export const videoSource = defineType({
       name: 'name',
       title: 'Video Name',
       type: 'string',
-      validation: (Rule) => Rule.required(),
     }),
 
     defineField({

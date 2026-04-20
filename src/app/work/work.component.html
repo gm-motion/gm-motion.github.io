@@ -23,13 +23,24 @@
 
             @if (!isGfxLoading) {
 
+              <!-- IMAGE (GIF) -->
+              @if (card.media.mediaType === 'image' && card.imageUrl) {
+                <img
+                  class="gfx-card-image"
+                  [class.loaded]="card.imageLoaded"
+                  (load)="card.imageLoaded = true"
+                  [src]="card.imageUrl"
+                  [alt]="card.media.alt || 'Work image'"
+                />
+              }
+
               <!-- VIDEO -->
-              @if (card.media.mediaType === 'video' && card.media.video) {
+              @else if (card.media.mediaType === 'video' && card.media.video) {
 
                 @if (card.media.video.sourceType === 'external' && card.safeUrl) {
                   <iframe
                     #videoFrame
-                    class="gfx-card-media"
+                    class="gfx-card-video"
                     [src]="card.safeUrl"
                     [title]="card.media.video.name"
                     frameborder="0"
@@ -39,7 +50,7 @@
 
                 } @else if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
                   <video
-                    class="gfx-card-media"
+                    class="gfx-card-video"
                     [src]="card.uploadUrl"
                     [attr.aria-label]="card.media.video.name"
                     autoplay
@@ -51,31 +62,21 @@
 
               }
 
-              <!-- IMAGE -->
-              @else if (card.media.mediaType === 'image' && card.imageUrl) {
-                <img
-                  class="gfx-card-media"
-                  [src]="card.imageUrl"
-                  [alt]="card.media.alt || 'Work image'"
-                />
-              }
-
             } @else {
               <div class="gfx-card-skeleton-media"></div>
             }
 
           </div>
 
-          <!-- TITLE -->
           @if (!isGfxLoading) {
 
-            @if (card.media.mediaType === 'video' && card.media.video?.name) {
-              <span class="gfx-card-name">
-                {{ card.media.video?.name }}
-              </span>
-            } @else if (card.media.mediaType === 'image') {
+            @if (card.media.mediaType === 'image') {
               <span class="gfx-card-name">
                 {{ card.media.alt || 'Image' }}
+              </span>
+            } @else if (card.media.mediaType === 'video' && card.media.video?.name) {
+              <span class="gfx-card-name">
+                {{ card.media.video?.name }}
               </span>
             }
 
@@ -104,14 +105,66 @@
 
 <div fadeIn class="media-card-container fade-in">
   <div class="media-masonry">
-    @for (card of photoVideoMedia; track card.name) {
+    @for (card of photoVideoMedia; track $index) {
       <div class="media-card">
         <div class="media-card-visual">
-          <img
-            [src]="card.img.asset?.url"
-            [alt]="card.name"
-            class="media-card-img"
-          />
+
+          @if (card.media.mediaType === 'image' && card.imageUrl) {
+            <img
+              [src]="card.imageUrl"
+              [alt]="card.media.alt || 'Media image'"
+              class="media-card-img"
+            />
+          }
+
+          @else if (card.media.mediaType === 'video' && card.media.video) {
+
+            @if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
+              <video
+                #hoverVideo
+                class="media-card-video"
+                [src]="card.uploadUrl"
+                [attr.aria-label]="card.media.video.name"
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                (mouseenter)="playHoverVideo(hoverVideo)"
+                (mouseleave)="pauseHoverVideo(hoverVideo)">
+              </video>
+            }
+
+            @else if (
+              card.media.mediaType === 'video' &&
+              card.media.video &&
+              card.uploadUrl
+            ) {
+              <video
+                #hoverVideo
+                class="media-card-video"
+                [src]="card.uploadUrl"
+                [attr.aria-label]="card.media.video.name"
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                (mouseenter)="playHoverVideo(hoverVideo)"
+                (mouseleave)="pauseHoverVideo(hoverVideo)">
+              </video>
+            }
+
+            @else if (card.media.video.sourceType === 'external' && card.safeUrl) {
+              <iframe
+                class="media-card-video"
+                [src]="card.safeUrl"
+                [title]="card.media.video.name"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            }
+          }
+
         </div>
       </div>
     }

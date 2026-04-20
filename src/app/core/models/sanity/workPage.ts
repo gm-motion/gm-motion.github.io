@@ -1,18 +1,7 @@
-import { MediaSource } from './commonSchemas';
-
-export interface GfxWorkItem {
-  route: string;
-  media: MediaSource;
-}
+import { GfxWorkItem, MediaSource } from './commonSchemas';
 
 export interface PhotoVideoMediaItem {
-  name: string;
-  img: {
-    asset?: {
-      url: string;
-    };
-    alt?: string;
-  };
+  media: MediaSource;
 }
 
 export interface WorkData {

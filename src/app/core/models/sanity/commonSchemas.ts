@@ -16,15 +16,21 @@ export interface VideoItem {
   route: string;
 }
 
+export interface GfxWorkItem {
+  route: string;
+  media: MediaSource;
+}
 
 export interface MediaSource {
   mediaType: 'video' | 'image';
   alt?: string;
   video?: VideoSource;
-  image?: {
-    asset?: {
-      url: string;
-    };
+  image?: MediaImage;
+}
+
+export interface MediaImage {
+  asset?: {
+    url?: string;
   };
 }
 
