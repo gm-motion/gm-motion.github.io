@@ -59,7 +59,7 @@
 <section class="scroll-stack">
   <div class="stack-stage" #stackStage>
     <div class="stack-sticky">
-      @for (video of homeVideoStack; track video.video?.name) {
+      @for (video of homeVideoStack; track video.video?.url) {
         <div class="scroll-stack-card" #stackCard>
           <div class="card-video">
             @if (video.mediaType === 'video' && video.video?.sourceType === 'upload' && video.uploadUrl) {
@@ -85,7 +85,7 @@
           </div>
 
           <div class="card-content">
-            <h2>{{ video.video?.name }}</h2>
+            <h2>{{ video.video?.url }}</h2>
             <p>/ {{ video.video?.description }}</p>
           </div>
         </div>
@@ -97,7 +97,7 @@
 <div fadeIn class="work-container fade-in">
   <span headerAnimation class="header">GFX Work</span>
 
-  @for (work of gfxWorkSection; track work.route) {
+  @for (work of gfxWorkSection; track $index) {
     <div class="work-line"></div>
 
     <a class="work-card" [routerLink]="work.route">
@@ -156,24 +156,33 @@
 
 <div fadeIn class="clients-container fade-in">
   <span headerAnimation class="header">Partnered Clients</span>
+
   <div class="partners-banner">
-    <div #carousel class="carousel">
-      <div class="group">
+    <div
+      #carousel
+      class="carousel"
+      [style.--scroll-distance.px]="scrollDistance"
+    >
+      <div #group class="group">
         @for (partner of partneredClientsSection; track partner.client) {
           <div class="card">
-            <img [src]="partner.img?.asset?.url"                 
-                 [alt]="partner.client"
-                 class="card-img"
+            <img
+              [src]="partner.img?.asset?.url"
+              [alt]="partner.client"
+              class="card-img"
+              (load)="onCarouselImageLoad()"
             >
           </div>
         }
       </div>
+
       <div aria-hidden class="group">
         @for (partner of partneredClientsSection; track partner.client) {
           <div class="card">
-            <img [src]="partner.img?.asset?.url"                 
-                 [alt]="partner.client"
-                 class="card-img"
+            <img
+              [src]="partner.img?.asset?.url"
+              [alt]="partner.client"
+              class="card-img"
             >
           </div>
         }
