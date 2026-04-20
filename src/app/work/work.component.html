@@ -15,7 +15,11 @@
       @for (card of row; track $index) {
         <a
           class="gfx-card"
-          [class.gfx-card-loading]="isGfxLoading || !card.media.video?.name"
+          [class.gfx-card-loading]="
+            isGfxLoading ||
+            (card.media.mediaType === 'video' && !card.media.video?.name) ||
+            (card.media.mediaType === 'image' && !card.imageUrl)
+          "
           [routerLink]="isGfxLoading ? null : card.route"
           [attr.aria-disabled]="isGfxLoading"
           loading="eager"
