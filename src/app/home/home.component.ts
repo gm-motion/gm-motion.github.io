@@ -123,6 +123,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       requestAnimationFrame(() => {
         this.updateStackCards();
+        this.retryTitleVideo();
+        this.retryStackVideos();
+        this.retryWorkVideos();
       });
 
       this.cdr.markForCheck();
