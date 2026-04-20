@@ -1,32 +1,19 @@
-import {
-  AfterViewInit,
-  HostListener,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
-import { FadeInDirective } from '../core/directives/fade-in.directive';
-import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
-import { SanityContentService } from '../core/sanity/sanity-content.service';
-import { VideoSource } from '../core/models/sanity/commonSchemas';
-import { GfxWorkItem, VideoItem } from '../core/models/sanity/commonSchemas';
-import { VideoPlayerService } from '../core/services/video-player.service';
-import { VideoProvider } from '../core/models/video.types';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {RouterLink} from '@angular/router';
+
+import {FadeInDirective} from '../core/directives/fade-in.directive';
+import {HeaderAnimationDirective} from '../core/directives/header-animation.directive';
+import {VideoItem, VideoSource} from '../core/models/sanity/commonSchemas';
+import {SanityContentService} from '../core/sanity/sanity-content.service';
+import {VideoPlayerService} from '../core/services/video-player.service';
 
 interface MediaImage {
-  asset?: {
-    url?: string;
-  };
+  asset?: {url?: string;};
 }
 
 interface MediaSource {
-  mediaType: 'video' | 'image';
+  mediaType: 'video'|'image';
   alt?: string;
   video?: VideoSource;
   image?: MediaImage;
@@ -53,12 +40,7 @@ interface PhotoVideoCard {
   styleUrls: ['./work.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkComponent implements OnInit, AfterViewInit {
-  @ViewChildren('videoFrame') videoFrames!: QueryList<
-    ElementRef<HTMLIFrameElement>
-  >;
-
-  private videos: { iframe: HTMLIFrameElement; provider: VideoProvider }[] = [];
+export class WorkComponent implements OnInit {
 
   gfxSubHeader = '';
   photoVideoParagraph = '';
@@ -68,26 +50,27 @@ export class WorkComponent implements OnInit, AfterViewInit {
 
   isGfxLoading = true;
 
-  gfxWorkRows: GfxCard[][] = Array.from({ length: 2 }, () =>
-    Array.from({ length: 3 }, () => ({
-      route: '/',
-      safeUrl: '',
-      uploadUrl: '',
-      video: {
-        name: '',
-        sourceType: 'upload',
-        uploadUrl: '',
-        safeUrl: '',
-        description: '',
-      },
-    })),
+  gfxWorkRows: GfxCard[][] = Array.from(
+      {length: 2},
+      () => Array.from({length: 3}, () => ({
+                                      route: '/',
+                                      safeUrl: '',
+                                      uploadUrl: '',
+                                      video: {
+                                        name: '',
+                                        sourceType: 'upload',
+                                        uploadUrl: '',
+                                        safeUrl: '',
+                                        description: '',
+                                      },
+                                    })),
   );
 
   constructor(
-    private sanitizer: DomSanitizer,
-    private sanityContentService: SanityContentService,
-    private cdr: ChangeDetectorRef,
-    private videoPlayer: VideoPlayerService,
+      private sanitizer: DomSanitizer,
+      private sanityContentService: SanityContentService,
+      private cdr: ChangeDetectorRef,
+      private videoPlayer: VideoPlayerService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -113,7 +96,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
 
       if (workPageData?.photoVideoMedia?.length) {
         this.photoVideoMedia = this.buildPhotoVideoMedia(
-          workPageData.photoVideoMedia,
+            workPageData.photoVideoMedia,
         );
       }
 
@@ -123,37 +106,6 @@ export class WorkComponent implements OnInit, AfterViewInit {
       this.isGfxLoading = false;
       this.cdr.markForCheck();
     }
-  }
-
-  ngAfterViewInit(): void {
-    // const frames = this.videoFrames.toArray();
-    // if (!frames.length) return;
-
-    // const flatCards = this.gfxWorkRows.flat();
-
-    // this.videos = frames
-    //   .map((frameRef, i) => {
-    //     const card = flatCards[i];
-    //     const provider =
-    //       card?.media?.mediaType === 'video'
-    //         ? card.media.video?.provider
-    //         : undefined;
-
-    //     return provider === 'vimeo' || provider === 'youtube'
-    //       ? { iframe: frameRef.nativeElement, provider }
-    //       : null;
-    //   })
-    //   .filter(
-    //     (
-    //       item,
-    //     ): item is {
-    //       iframe: HTMLIFrameElement;
-    //       provider: 'vimeo' | 'youtube';
-    //     } => item !== null,
-    //   );
-
-    // this.videoPlayer.retryAllVideos(this.videos, 250);
-    // this.videoPlayer.retryAllVideos(this.videos, 500);
   }
 
   private buildGfxRows(items: VideoItem[], size: number = 3): GfxCard[][] {
@@ -193,23 +145,21 @@ export class WorkComponent implements OnInit, AfterViewInit {
   }
 
   private buildPhotoVideoMedia(
-    items: { media: MediaSource }[],
-  ): PhotoVideoCard[] {
+      items: {media: MediaSource}[],
+      ): PhotoVideoCard[] {
     return items.map((item) => {
-      let safeUrl: SafeResourceUrl | undefined;
-      let uploadUrl: string | undefined;
-      let imageUrl: string | undefined;
+      let safeUrl: SafeResourceUrl|undefined;
+      let uploadUrl: string|undefined;
+      let imageUrl: string|undefined;
 
       if (item.media.mediaType === 'video' && item.media.video) {
         const video = item.media.video;
 
         if (video.sourceType === 'external') {
-          if (
-            (video.provider === 'vimeo' || video.provider === 'youtube') &&
-            video.url
-          ) {
+          if ((video.provider === 'vimeo' || video.provider === 'youtube') &&
+              video.url) {
             safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-              this.videoPlayer.buildEmbedUrl(video.url, video.provider),
+                this.videoPlayer.buildEmbedUrl(video.url, video.provider),
             );
           } else if (video.provider === 'direct' && video.url) {
             uploadUrl = video.url;
@@ -230,11 +180,5 @@ export class WorkComponent implements OnInit, AfterViewInit {
         imageUrl,
       };
     });
-  }
-
-  @HostListener('window:orientationchange')
-  @HostListener('window:resize')
-  onViewportChange(): void {
-    // this.videoPlayer.retryAllVideos(this.videos, 250);
   }
 }

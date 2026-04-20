@@ -1,28 +1,13 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
-import { FadeInDirective } from '../core/directives/fade-in.directive';
-import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
-import { SanityContentService } from '../core/sanity/sanity-content.service';
-import {
-  Paragraph,
-  VideoSource,
-  VideoItem,
-} from '../core/models/sanity/commonSchemas';
-import { HomeData, PartneredClientItem } from '../core/models/sanity/homePage';
-import { VideoPlayerService } from '../core/services/video-player.service';
-import { VideoProvider } from '../core/models/video.types';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren,} from '@angular/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {RouterLink} from '@angular/router';
+
+import {FadeInDirective} from '../core/directives/fade-in.directive';
+import {HeaderAnimationDirective} from '../core/directives/header-animation.directive';
+import {Paragraph, VideoItem, VideoSource,} from '../core/models/sanity/commonSchemas';
+import {HomeData, PartneredClientItem} from '../core/models/sanity/homePage';
+import {SanityContentService} from '../core/sanity/sanity-content.service';
+import {VideoPlayerService} from '../core/services/video-player.service';
 
 
 interface ResolvedVideoSource extends VideoSource {
@@ -44,33 +29,24 @@ interface ResolvedVideoItem {
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChildren('stackCard') stackCards!: QueryList<ElementRef<HTMLElement>>;
-  @ViewChild('stackStage', { static: false })
+  @ViewChild('stackStage', {static: false})
   stackStage!: ElementRef<HTMLElement>;
   @ViewChild('carousel') carousel?: ElementRef<HTMLElement>;
-  @ViewChild('titleVideoFrame')
-  titleVideoFrame!: ElementRef<HTMLIFrameElement>;
-  @ViewChildren('stackVideoFrame') stackVideoFrames!: QueryList<
-    ElementRef<HTMLIFrameElement>
-  >;
-  @ViewChildren('workVideoFrame') workVideoFrames!: QueryList<
-    ElementRef<HTMLIFrameElement>
-  >;
   @ViewChild('group') group?: ElementRef<HTMLElement>;
 
-  homeVideoStack: ResolvedVideoSource[] = Array.from(
-      {length: 3},
-      () => ({
-        name: '',
-        description: '',
-        sourceType:
-            'external',  // or 'external', doesn't matter as long as consistent
-        uploadUrl: '',   // prevents video render
-        safeUrl: '',     // prevents iframe render
-      }));
   titleVideo?: ResolvedVideoSource;
 
   headQuote = '';
   headParagraphs: Paragraph[] = [];
+
+  homeVideoStack: ResolvedVideoSource[] =
+      Array.from({length: 3}, () => ({
+                                name: '',
+                                description: '',
+                                sourceType: 'external',
+                                uploadUrl: '',
+                                safeUrl: '',
+                              }));
 
   gfxWorkSection: ResolvedVideoItem[] = [];
   partneredClientsSection: PartneredClientItem[] = [];
@@ -80,16 +56,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private carouselLoadScheduled = false;
 
   constructor(
-    private sanitizer: DomSanitizer,
-    private sanityContentService: SanityContentService,
-    private cdr: ChangeDetectorRef,
-    private videoPlayer: VideoPlayerService,
+      private sanitizer: DomSanitizer,
+      private sanityContentService: SanityContentService,
+      private cdr: ChangeDetectorRef,
+      private videoPlayer: VideoPlayerService,
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      const homePageData: HomeData | null =
-        await this.sanityContentService.getHomePage();
+      const homePageData: HomeData|null =
+          await this.sanityContentService.getHomePage();
 
       if (homePageData?.titleVideo) {
         this.titleVideo = this.resolveVideoSource(homePageData.titleVideo);
@@ -194,7 +170,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
   }
 
-  @HostListener('window:scroll') onWindowScroll(): void {
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
     this.updateStackCards();
   }
 
@@ -234,7 +211,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private updateStackCards(): void {
-    if (this.isMobile()) return; // skip animation on mobile
+    if (this.isMobile()) return;  // skip animation on mobile
     if (!this.stackCards?.length || !this.stackStage) return;
 
     const vh = window.innerHeight;
@@ -243,9 +220,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const collapsedHeight = Math.max(120, vh * 0.25);
     const expandedHeight = (vw * 0.9 * 9) / 16;
 
-    const growDistance = vh * 0.9; // was 1.5
-    const holdDistance = vh * 0.4; // was 1.2
-    const shrinkDistance = vh * 0.9; // was 1.5
+    const growDistance = vh * 0.9;    // was 1.5
+    const holdDistance = vh * 0.4;    // was 1.2
+    const shrinkDistance = vh * 0.9;  // was 1.5
     const cycleDistance = growDistance + holdDistance + shrinkDistance;
 
     const cardCount = this.stackCards.length;
@@ -258,8 +235,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const scrolled = this.clamp(-stageRect.top, 0, maxScroll);
 
     const baseIndex = Math.min(
-      cardCount - 1,
-      Math.floor(scrolled / cycleDistance),
+        cardCount - 1,
+        Math.floor(scrolled / cycleDistance),
     );
     const localScroll = scrolled - baseIndex * cycleDistance;
 
@@ -276,7 +253,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const heights: number[] = new Array(cardCount).fill(collapsedHeight);
     heights[baseIndex] = this.lerp(collapsedHeight, expandedHeight, t);
 
-    const gap = 16; // 1rem in px
+    const gap = 16;  // 1rem in px
 
     const buildLayout = (centerIndex: number): number[] => {
       const tops = new Array(cardCount).fill(0);
@@ -302,7 +279,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       if (localScroll > handoffStart) {
         const mix = this.smoothstep(
-          this.clamp((localScroll - handoffStart) / handoffDistance, 0, 1),
+            this.clamp((localScroll - handoffStart) / handoffDistance, 0, 1),
         );
 
         const nextTops = buildLayout(baseIndex + 1);
@@ -314,7 +291,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const card = cardRef.nativeElement;
 
       card.style.height = `${Math.round(heights[i])}px`;
-      card.style.top = `${tops[i]}px`; // no rounding — let the browser sub-pixel render
+      card.style.top =
+          `${tops[i]}px`;  // no rounding — let the browser sub-pixel render
       card.style.left = '50%';
       card.style.transform = 'translateX(-50%) translateZ(0)';
 

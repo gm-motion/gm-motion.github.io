@@ -13,7 +13,6 @@
 
       @if (titleVideo?.sourceType === 'external' && titleVideo?.safeUrl) {
         <iframe
-          #titleVideoFrame
           [src]="titleVideo?.safeUrl"
           [title]="titleVideo?.name"
           frameborder="0"
@@ -66,7 +65,6 @@
 
             @if (video.sourceType === 'external' && video.safeUrl) {
               <iframe
-                #stackVideoFrame
                 [src]="video.safeUrl"
                 [title]="video.name"
                 frameborder="0"
@@ -108,7 +106,6 @@
 
         @if (work.video.sourceType === 'external' && work.video.safeUrl) {
           <iframe
-            #workVideoFrame
             class="work-card-video"
             [src]="work.video.safeUrl"
             [title]="work.video.name"
@@ -145,7 +142,7 @@
             <img
               [src]="partner.img?.asset?.url"
               [alt]="partner.client"
-              class="card-img"
+              class="card-image"
               (load)="onCarouselImageLoad()"
             >
           </div>
@@ -158,7 +155,7 @@
             <img
               [src]="partner.img?.asset?.url"
               [alt]="partner.client"
-              class="card-img"
+              class="card-image"
             >
           </div>
         }

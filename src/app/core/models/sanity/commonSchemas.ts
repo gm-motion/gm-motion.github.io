@@ -16,11 +16,6 @@ export interface VideoItem {
   route: string;
 }
 
-export interface GfxWorkItem {
-  route: string;
-  media: MediaSource;
-}
-
 export interface MediaSource {
   mediaType: 'video' | 'image';
   alt?: string;

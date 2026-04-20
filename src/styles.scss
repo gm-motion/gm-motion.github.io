@@ -46,6 +46,7 @@ body.light-theme {
   --color-primary: #c81e1e;
   --color-white: #f6f6f6;
   --color-black: #15171f;
+  --color-dark-rgb: 11, 15, 26;
 
   /* box-shadows */
   --shadow-card: rgba(0, 0, 0, 0.3) 0.2rem 0.2rem 1rem;
@@ -70,8 +71,8 @@ body.light-theme {
 .light-theme {
   /* light mode override styles (will change) */
   --color-bg: #f6f6f6;
-  --color-bg-rgb: 11, 15, 26;
-  --color-text: #11131a; /* slightly deeper for better contrast */
+  --color-bg-rgb: 246, 246, 246;
+  --color-text: #11131a; 
   --color-subtext: #727272;
   --color-surface: #1c2230; 
 }
@@ -101,8 +102,6 @@ body {
 
 .mat-mdc-slide-toggle {
   transform: scale(1.1);
-
-  /* base off state */
   --mat-sys-on-surface: var(--color-black);
 }
 

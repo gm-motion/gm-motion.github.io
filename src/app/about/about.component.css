@@ -380,7 +380,7 @@
 }
 
 .milestone-content {
-  background: rgba(var(--color-bg-rgb), 0.04);
+  background: rgba(var(--color-dark-rgb), 0.04);
   border: 1px solid rgba(200, 200, 200, 0.25);
   border-radius: 1.25rem;
   padding: 1.25rem 1.5rem;

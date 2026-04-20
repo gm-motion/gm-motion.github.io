@@ -186,23 +186,13 @@
   padding: none;
 }
 
-.gfx-card-image {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.gfx-card-image.loaded {
-  opacity: 1;
-}
-
 .gfx-card-visual:hover {
   transform: scale(1.05);
 }
 
-.media-card-img,
+.media-card-image,
 .media-card-video,
-.gfx-card-video,
-.gfx-card-image {
+.gfx-card-video {
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -283,7 +273,7 @@
   transform: scale(1.02);
 }
 
-.media-card-img {
+.media-card-image {
   display: block;
   width: 100%;
   height: auto;
