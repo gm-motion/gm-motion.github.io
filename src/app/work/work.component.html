@@ -23,7 +23,6 @@
             @if (!isGfxLoading && card.video.name) {
               @if (card.video.sourceType === 'external' && card.safeUrl) {
                 <iframe
-                  #videoFrame
                   class="gfx-card-video"
                   [src]="card.safeUrl"
                   [title]="card.video.name"
@@ -79,7 +78,7 @@
             <img
               [src]="card.imageUrl"
               [alt]="card.media.alt || 'Media image'"
-              class="media-card-img"
+              class="media-card-image"
               loading="eager"
               fetchpriority="high"
               decoding="async"

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import Player from '@vimeo/player';
-import { VideoProvider } from '../models/video.types';
+
+type VideoProvider = 'vimeo'|'youtube';
 
 @Injectable({
   providedIn: 'root',
@@ -72,74 +73,5 @@ export class VideoPlayerService {
     params.set('showinfo', '0'); // deprecated but harmless
 
     return `https://www.youtube.com/embed/${id}?${params.toString()}`;
-  }
-
-  initVimeoPlayer(iframe: HTMLIFrameElement): Player {
-    let player = this.vimeoPlayers.get(iframe);
-
-    if (!player) {
-      player = new Player(iframe);
-      this.vimeoPlayers.set(iframe, player);
-    }
-
-    return player;
-  }
-
-  restartIframe(iframe: HTMLIFrameElement): void {
-    const src = iframe.src;
-    iframe.src = '';
-
-    requestAnimationFrame(() => {
-      iframe.src = src;
-    });
-  }
-
-  async retryVideo(
-    iframe: HTMLIFrameElement,
-    provider: VideoProvider,
-  ): Promise<void> {
-    if (provider === 'vimeo') {
-      await this.retryVimeo(iframe);
-      return;
-    }
-
-    this.retryYouTube(iframe);
-  }
-
-  async retryAllVideos(
-    videos: { iframe: HTMLIFrameElement; provider: VideoProvider }[],
-    delayMs = 0,
-  ): Promise<void> {
-    if (!videos.length) return;
-    window.setTimeout(async () => {
-      for (const video of videos) {
-        await this.retryVideo(video.iframe, video.provider);
-      }
-    }, delayMs);
-  }
-
-  private async retryVimeo(iframe: HTMLIFrameElement): Promise<void> {
-    try {
-      const player = this.initVimeoPlayer(iframe);
-      await player.ready();
-
-      const paused = await player.getPaused().catch(() => true);
-
-      if (paused) {
-        await player.play();
-      }
-    } catch {
-      this.restartIframe(iframe);
-    }
-  }
-
-  private retryYouTube(iframe: HTMLIFrameElement): void {
-    this.restartIframe(iframe);
-  }
-
-  restartAnimation(el: HTMLElement): void {
-    el.style.animation = 'none';
-    void el.offsetWidth;
-    el.style.animation = '';
   }
 }
