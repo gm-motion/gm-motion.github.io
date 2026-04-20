@@ -1,11 +1,7 @@
 <div class="title-container">
   <div class="title-video">
     <div class="title-video-frame">
-      @if (
-        titleVideo?.mediaType === 'video' &&
-        titleVideo?.video?.sourceType === 'upload' &&
-        titleVideo?.uploadUrl
-      ) {
+      @if (titleVideo?.sourceType === 'upload' && titleVideo?.uploadUrl) {
         <video
           [src]="titleVideo?.uploadUrl"
           autoplay
@@ -15,17 +11,13 @@
         ></video>
       }
 
-      @if (
-        titleVideo?.mediaType === 'video' &&
-        titleVideo?.video?.sourceType === 'external' &&
-        titleVideo?.safeUrl
-      ) {
+      @if (titleVideo?.sourceType === 'external' && titleVideo?.safeUrl) {
         <iframe
           #titleVideoFrame
           [src]="titleVideo?.safeUrl"
-          [title]="titleVideo?.video?.name"
+          [title]="titleVideo?.name"
           frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen>
         </iframe>
       }
@@ -33,8 +25,8 @@
   </div>
 
   <div class="title-video-info">
-    <span class="video-name">{{ titleVideo?.video?.name }}</span>
-    | {{ titleVideo?.video?.description }}
+    <span class="video-name">{{ titleVideo?.name }}</span>
+    | {{ titleVideo?.description }}
   </div>
 
   <button class="chevron-container" type="button" (click)="scrollDown()">
@@ -59,10 +51,10 @@
 <section class="scroll-stack">
   <div class="stack-stage" #stackStage>
     <div class="stack-sticky">
-      @for (video of homeVideoStack; track video.video?.url) {
+      @for (video of homeVideoStack; track $index) {
         <div class="scroll-stack-card" #stackCard>
           <div class="card-video">
-            @if (video.mediaType === 'video' && video.video?.sourceType === 'upload' && video.uploadUrl) {
+            @if (video.sourceType === 'upload' && video.uploadUrl) {
               <video
                 [src]="video.uploadUrl"
                 autoplay
@@ -72,11 +64,11 @@
               ></video>
             }
 
-            @if (video.mediaType === 'video' && video.video?.sourceType === 'external' && video.safeUrl) {
+            @if (video.sourceType === 'external' && video.safeUrl) {
               <iframe
                 #stackVideoFrame
                 [src]="video.safeUrl"
-                [title]="video.video?.name"
+                [title]="video.name"
                 frameborder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowfullscreen>
@@ -85,8 +77,8 @@
           </div>
 
           <div class="card-content">
-            <h2>{{ video.video?.name }}</h2>
-            <p>/ {{ video.video?.description }}</p>
+            <h2>{{ video.name }}</h2>
+            <p>/ {{ video.description }}</p>
           </div>
         </div>
       }
@@ -97,15 +89,16 @@
 <div fadeIn class="work-container fade-in">
   <span headerAnimation class="header">GFX Work</span>
 
+
   @for (work of gfxWorkSection; track $index) {
     <div class="work-line"></div>
 
     <a class="work-card" [routerLink]="work.route">
       <div class="work-card-visual">
-        @if (work.media.mediaType === 'video' && work.media.video?.sourceType === 'upload' && work.media.uploadUrl) {
+        @if (work.video.sourceType === 'upload' && work.video.uploadUrl) {
           <video
             class="work-card-video"
-            [src]="work.media.uploadUrl"
+            [src]="work.video.uploadUrl"
             autoplay
             muted
             loop
@@ -113,37 +106,20 @@
           </video>
         }
 
-        @if (work.media.mediaType === 'video' && work.media.video?.sourceType === 'external' && work.media.safeUrl) {
+        @if (work.video.sourceType === 'external' && work.video.safeUrl) {
           <iframe
             #workVideoFrame
             class="work-card-video"
-            [src]="work.media.safeUrl"
-            [title]="work.media.video?.name"
+            [src]="work.video.safeUrl"
+            [title]="work.video.name"
             frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen>
           </iframe>
         }
-
-        @if (work.media.mediaType === 'image' && work.media.imageUrl) {
-          <img
-            class="work-card-image"
-            [src]="work.media.imageUrl"
-            [alt]="work.media.alt || 'Work image'"
-            loading="eager"
-            fetchpriority="high"
-            decoding="sync"
-          />
-        }
       </div>
 
-      <div class="work-card-name">
-        {{
-          work.media.mediaType === 'video'
-            ? work.media.video?.name
-            : work.media.alt || 'Image'
-        }}
-      </div>
+      <div class="work-card-name">{{ work.video.name }}</div>
     </a>
   }
 

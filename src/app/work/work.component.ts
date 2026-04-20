@@ -15,7 +15,7 @@ import { FadeInDirective } from '../core/directives/fade-in.directive';
 import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
 import { VideoSource } from '../core/models/sanity/commonSchemas';
-import { GfxWorkItem } from '../core/models/sanity/commonSchemas';
+import { GfxWorkItem, VideoItem } from '../core/models/sanity/commonSchemas';
 import { VideoPlayerService } from '../core/services/video-player.service';
 import { VideoProvider } from '../core/models/video.types';
 
@@ -34,11 +34,9 @@ interface MediaSource {
 
 interface GfxCard {
   route: string;
-  media: MediaSource;
+  video: VideoSource;
   safeUrl?: SafeResourceUrl;
   uploadUrl?: string;
-  imageUrl?: string;
-  imageLoaded?: boolean;
 }
 
 interface PhotoVideoCard {
@@ -65,7 +63,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
   gfxSubHeader = '';
   photoVideoParagraph = '';
 
-  gfxWorkMedia: GfxWorkItem[] = [];
+  gfxWorkMedia: VideoItem[] = [];
   photoVideoMedia: PhotoVideoCard[] = [];
 
   isGfxLoading = true;
@@ -73,18 +71,14 @@ export class WorkComponent implements OnInit, AfterViewInit {
   gfxWorkRows: GfxCard[][] = Array.from({ length: 2 }, () =>
     Array.from({ length: 3 }, () => ({
       route: '/',
-      safeUrl: undefined,
+      safeUrl: '',
       uploadUrl: '',
-      imageUrl: '',
-      media: {
-        mediaType: 'video',
-        video: {
-          name: '',
-          sourceType: 'upload',
-          uploadUrl: '',
-          safeUrl: '',
-          description: '',
-        },
+      video: {
+        name: '',
+        sourceType: 'upload',
+        uploadUrl: '',
+        safeUrl: '',
+        description: '',
       },
     })),
   );
@@ -162,48 +156,33 @@ export class WorkComponent implements OnInit, AfterViewInit {
     // this.videoPlayer.retryAllVideos(this.videos, 500);
   }
 
-  private buildGfxRows(items: GfxWorkItem[], size: number = 3): GfxCard[][] {
+  private buildGfxRows(items: VideoItem[], size: number = 3): GfxCard[][] {
     const rows: GfxCard[][] = [];
 
     for (let i = 0; i < items.length; i += size) {
       const chunk: GfxCard[] = items.slice(i, i + size).map((item) => {
         let rawUrl = '';
-        let uploadUrl: string | undefined;
-        let imageUrl: string | undefined;
 
-        if (item.media.mediaType === 'video' && item.media.video) {
-          const video = item.media.video;
-
-          if (video.sourceType === 'external') {
-            if (
-              (video.provider === 'vimeo' || video.provider === 'youtube') &&
-              video.url
-            ) {
-              rawUrl = this.videoPlayer.buildEmbedUrl(
-                video.url,
-                video.provider,
-              );
-            } else if (video.provider === 'direct' && video.url) {
-              rawUrl = video.url;
-            }
-          } else if (video.sourceType === 'upload') {
-            uploadUrl = video.videoFile?.asset?.url || '';
+        if (item.video.sourceType === 'external') {
+          if ((item.video.provider === 'vimeo' ||
+               item.video.provider === 'youtube') &&
+              item.video.url) {
+            rawUrl = this.videoPlayer.buildEmbedUrl(
+                item.video.url, item.video.provider);
+          } else if (item.video.provider === 'direct' && item.video.url) {
+            rawUrl = item.video.url;
           }
-        }
-
-        if (item.media.mediaType === 'image') {
-          imageUrl = item.media.image?.asset?.url || '';
         }
 
         return {
           route: item.route,
-          media: item.media,
-          safeUrl: rawUrl
-            ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl)
-            : undefined,
-          uploadUrl,
-          imageUrl,
-          imageLoaded: false,
+          video: item.video,
+          safeUrl: rawUrl ?
+              this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl) :
+              undefined,
+          uploadUrl: item.video.sourceType === 'upload' ?
+              item.video.videoFile?.asset?.url || '' :
+              undefined,
         };
       });
 

@@ -1,4 +1,4 @@
-import { SanityImage, GfxWorkItem, Paragraph, VideoSource, VideoItem } from './commonSchemas';
+import { SanityImage, Paragraph, VideoSource, VideoItem } from './commonSchemas';
 
 export interface PartneredClientItem {
   client: string;
@@ -10,6 +10,6 @@ export interface HomeData {
   headQuote?: string;
   headParagraphs: Paragraph[];
   videoStack?: VideoSource[];
-  gfxWorkSection?: GfxWorkItem[];
+  gfxWorkSection?: VideoItem[];
   partneredClientsSection?: PartneredClientItem[];
 }
