@@ -132,34 +132,34 @@ export class WorkComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const frames = this.videoFrames.toArray();
-    if (!frames.length) return;
+    // const frames = this.videoFrames.toArray();
+    // if (!frames.length) return;
 
-    const flatCards = this.gfxWorkRows.flat();
+    // const flatCards = this.gfxWorkRows.flat();
 
-    this.videos = frames
-      .map((frameRef, i) => {
-        const card = flatCards[i];
-        const provider =
-          card?.media?.mediaType === 'video'
-            ? card.media.video?.provider
-            : undefined;
+    // this.videos = frames
+    //   .map((frameRef, i) => {
+    //     const card = flatCards[i];
+    //     const provider =
+    //       card?.media?.mediaType === 'video'
+    //         ? card.media.video?.provider
+    //         : undefined;
 
-        return provider === 'vimeo' || provider === 'youtube'
-          ? { iframe: frameRef.nativeElement, provider }
-          : null;
-      })
-      .filter(
-        (
-          item,
-        ): item is {
-          iframe: HTMLIFrameElement;
-          provider: 'vimeo' | 'youtube';
-        } => item !== null,
-      );
+    //     return provider === 'vimeo' || provider === 'youtube'
+    //       ? { iframe: frameRef.nativeElement, provider }
+    //       : null;
+    //   })
+    //   .filter(
+    //     (
+    //       item,
+    //     ): item is {
+    //       iframe: HTMLIFrameElement;
+    //       provider: 'vimeo' | 'youtube';
+    //     } => item !== null,
+    //   );
 
-    this.videoPlayer.retryAllVideos(this.videos, 250);
-    this.videoPlayer.retryAllVideos(this.videos, 500);
+    // this.videoPlayer.retryAllVideos(this.videos, 250);
+    // this.videoPlayer.retryAllVideos(this.videos, 500);
   }
 
   private buildGfxRows(items: GfxWorkItem[], size: number = 3): GfxCard[][] {
@@ -265,6 +265,6 @@ export class WorkComponent implements OnInit, AfterViewInit {
   @HostListener('window:orientationchange')
   @HostListener('window:resize')
   onViewportChange(): void {
-    this.videoPlayer.retryAllVideos(this.videos, 250);
+    // this.videoPlayer.retryAllVideos(this.videos, 250);
   }
 }
