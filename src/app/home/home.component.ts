@@ -229,25 +229,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  @HostListener('window:scroll')
-  onWindowScroll(): void {
+  @HostListener('window:scroll') onWindowScroll(): void {
     this.updateStackCards();
   }
+
+  private lastWindowWidth = window.innerWidth;
 
   @HostListener('window:resize')
   @HostListener('window:orientationchange')
   onWindowResize(): void {
-    this.scheduleCarouselRefresh();
+    const widthChanged = window.innerWidth !== this.lastWindowWidth;
+    this.lastWindowWidth = window.innerWidth;
+
+    if (widthChanged) {
+      this.scheduleCarouselRefresh();
+    }
 
     if (this.isMobile()) {
       this.clearStackCardInlineStyles();
     } else {
       this.updateStackCards();
     }
-
-    // this.retryTitleVideo();
-    // this.retryStackVideos();
-    // this.retryWorkVideos();
   }
 
   private isRetryableProvider(
