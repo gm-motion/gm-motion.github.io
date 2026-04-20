@@ -1,5 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {mediaSource} from './mediaSource'
+import {videoSource} from './videoSource'
 
 export default defineType({
   name: 'workPage',
@@ -29,9 +30,9 @@ export default defineType({
           title: 'Work Item',
           fields: [
             defineField({
-              name: 'media',
-              title: 'Media Source',
-              type: 'mediaSource',
+              name: 'video',
+              title: 'GFX Work Video',
+              type: 'videoSource',
             }),
             defineField({
               name: 'route',
@@ -43,17 +44,8 @@ export default defineType({
           ],
           preview: {
             select: {
-              mediaType: 'media.mediaType',
-              videoName: 'media.video.name',
-              image: 'media.image',
+              title: 'video.name',
               subtitle: 'route',
-            },
-            prepare({mediaType, videoName, image, subtitle}) {
-              return {
-                title: mediaType === 'video' ? videoName || 'Video' : 'Image',
-                subtitle,
-                media: mediaType === 'image' ? image : undefined,
-              }
             },
           },
         },

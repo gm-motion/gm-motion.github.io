@@ -18,24 +18,21 @@ import { SanityContentService } from '../core/sanity/sanity-content.service';
 import {
   Paragraph,
   VideoSource,
-  MediaSource,
-  GfxWorkItem,
+  VideoItem,
 } from '../core/models/sanity/commonSchemas';
 import { HomeData, PartneredClientItem } from '../core/models/sanity/homePage';
 import { VideoPlayerService } from '../core/services/video-player.service';
 import { VideoProvider } from '../core/models/video.types';
 
 
-interface ResolvedMediaSource extends MediaSource {
+interface ResolvedVideoSource extends VideoSource {
   safeUrl?: SafeResourceUrl;
   uploadUrl?: string;
-  imageUrl?: string;
-  imageLoaded?: boolean;
 }
 
-interface ResolvedGfxWorkItem {
+interface ResolvedVideoItem {
   route: string;
-  media: ResolvedMediaSource;
+  video: ResolvedVideoSource;
 }
 
 @Component({
@@ -60,23 +57,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   >;
   @ViewChild('group') group?: ElementRef<HTMLElement>;
 
-  homeVideoStack: ResolvedMediaSource[] = Array.from({ length: 3 }, () => ({
-    mediaType: 'video',
-    video: {
-      name: '',
-      description: '',
-      sourceType: 'external',
-    },
-    safeUrl: undefined,
-    uploadUrl: undefined,
-  }));
-
-  titleVideo?: ResolvedMediaSource;
+  homeVideoStack: ResolvedVideoSource[] = Array.from(
+      {length: 3},
+      () => ({
+        name: '',
+        description: '',
+        sourceType:
+            'external',  // or 'external', doesn't matter as long as consistent
+        uploadUrl: '',   // prevents video render
+        safeUrl: '',     // prevents iframe render
+      }));
+  titleVideo?: ResolvedVideoSource;
 
   headQuote = '';
   headParagraphs: Paragraph[] = [];
 
-  gfxWorkSection: ResolvedGfxWorkItem[] = [];
+  gfxWorkSection: ResolvedVideoItem[] = [];
   partneredClientsSection: PartneredClientItem[] = [];
 
   scrollDistance = 0;
@@ -108,15 +104,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
 
       if (homePageData?.videoStack?.length) {
-        this.homeVideoStack = homePageData.videoStack.map((video) =>
-          this.resolveVideoSource(video),
+        this.homeVideoStack = homePageData.videoStack.map(
+            (video) => this.resolveVideoSource(video),
         );
         console.log(this.homeVideoStack);
       }
 
       if (homePageData?.gfxWorkSection?.length) {
-        this.gfxWorkSection = homePageData.gfxWorkSection.map((item) =>
-          this.resolveGfxWorkItem(item),
+        this.gfxWorkSection = homePageData.gfxWorkSection.map(
+            (item) => this.resolveVideoItem(item),
         );
       }
 
@@ -128,9 +124,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       requestAnimationFrame(() => {
         this.updateStackCards();
-        // this.retryTitleVideo();
-        // // this.retryStackVideos();
-        // this.retryWorkVideos();
       });
 
       this.cdr.markForCheck();
@@ -141,11 +134,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.updateStackCards();
-
-    // this.retryTitleVideo();
-    // // this.retryStackVideos();
-    // this.retryWorkVideos();
-
     this.scheduleCarouselRefresh();
     setTimeout(() => this.scheduleCarouselRefresh(), 100);
   }
@@ -179,54 +167,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
     carouselEl.style.animation = '';
   }
 
-  private resolveMediaSource(media: MediaSource): ResolvedMediaSource {
+  private resolveVideoSource(video: VideoSource): ResolvedVideoSource {
     let rawUrl = '';
-    let uploadUrl: string | undefined;
-    let imageUrl: string | undefined;
 
-    if (media.mediaType === 'video' && media.video) {
-      const video = media.video;
-
-      if (
-        video.sourceType === 'external' &&
-        video.url &&
-        (video.provider === 'vimeo' || video.provider === 'youtube')
-      ) {
-        rawUrl = this.videoPlayer.buildEmbedUrl(video.url, video.provider);
-      } else if (video.provider === 'direct' && video.url) {
-        uploadUrl = video.url;
-      } else if (video.sourceType === 'upload') {
-        uploadUrl = video.videoFile?.asset?.url || '';
-      }
-    }
-
-    if (media.mediaType === 'image') {
-      imageUrl = media.image?.asset?.url || '';
+    if (video.sourceType === 'external' && video.url &&
+        (video.provider === 'vimeo' || video.provider === 'youtube')) {
+      rawUrl = this.videoPlayer.buildEmbedUrl(video.url, video.provider);
+    } else if (video.provider === 'direct' && video.url) {
+      rawUrl = video.url;
     }
 
     return {
-      ...media,
-      safeUrl: rawUrl
-        ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl)
-        : undefined,
-      uploadUrl,
-      imageUrl,
-      imageLoaded: false,
+      ...video,
+      safeUrl: rawUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl) :
+                        undefined,
+      uploadUrl: video.sourceType === 'upload' ?
+          video.videoFile?.asset?.url || '' :
+          undefined,
     };
   }
 
-  private resolveGfxWorkItem(item: GfxWorkItem): ResolvedGfxWorkItem {
+  private resolveVideoItem(item: VideoItem): ResolvedVideoItem {
     return {
       route: item.route,
-      media: this.resolveMediaSource(item.media),
+      video: this.resolveVideoSource(item.video),
     };
-  }
-
-  private resolveVideoSource(video: VideoSource): ResolvedMediaSource {
-    return this.resolveMediaSource({
-      mediaType: 'video',
-      video,
-    });
   }
 
   @HostListener('window:scroll') onWindowScroll(): void {
@@ -250,80 +215,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } else {
       this.updateStackCards();
     }
-  }
-
-  private isRetryableProvider(
-    provider: VideoProvider | 'direct' | undefined,
-  ): provider is VideoProvider {
-    return provider === 'vimeo' || provider === 'youtube';
-  }
-
-  private buildRetryGroup(
-    frames: QueryList<ElementRef<HTMLIFrameElement>>,
-    videos: { provider?: VideoProvider | 'direct' }[],
-  ): { iframe: HTMLIFrameElement; provider: VideoProvider }[] {
-    return frames
-      .toArray()
-      .map((frameRef, i) => {
-        const provider = videos[i]?.provider;
-
-        if (!this.isRetryableProvider(provider)) {
-          return null;
-        }
-
-        return {
-          iframe: frameRef.nativeElement,
-          provider,
-        };
-      })
-      .filter(
-        (
-          item,
-        ): item is { iframe: HTMLIFrameElement; provider: VideoProvider } =>
-          item !== null,
-      );
-  }
-
-  private retryTitleVideo(): void {
-    const iframe = this.titleVideoFrame?.nativeElement;
-    const provider =
-      this.titleVideo?.mediaType === 'video'
-        ? this.titleVideo.video?.provider
-        : undefined;
-
-    if (!iframe || !this.isRetryableProvider(provider)) return;
-
-    this.videoPlayer.retryAllVideos([{ iframe, provider }], 400);
-    this.videoPlayer.retryAllVideos([{ iframe, provider }], 1200);
-  }
-
-  private retryStackVideos(): void {
-    const stackVideos = this.homeVideoStack
-      .filter(
-        (media): media is ResolvedMediaSource =>
-          media.mediaType === 'video' && !!media.video,
-      )
-      .map((media) => media.video!);
-
-    const videos = this.buildRetryGroup(this.stackVideoFrames, stackVideos);
-
-    this.videoPlayer.retryAllVideos(videos, 500);
-    this.videoPlayer.retryAllVideos(videos, 1300);
-  }
-
-  private retryWorkVideos(): void {
-    const workVideos = this.gfxWorkSection
-      .map((item) => item.media)
-      .filter(
-        (media): media is ResolvedMediaSource =>
-          media.mediaType === 'video' && !!media.video,
-      )
-      .map((media) => media.video!);
-
-    const videos = this.buildRetryGroup(this.workVideoFrames, workVideos);
-
-    this.videoPlayer.retryAllVideos(videos, 500);
-    this.videoPlayer.retryAllVideos(videos, 1300);
   }
 
   private clamp(value: number, min: number, max: number): number {

@@ -15,82 +15,43 @@
       @for (card of row; track $index) {
         <a
           class="gfx-card"
-          [class.gfx-card-loading]="
-            isGfxLoading ||
-            (card.media.mediaType === 'video' && !card.media.video?.name) ||
-            (card.media.mediaType === 'image' && !card.imageUrl)
-          "
+          [class.gfx-card-loading]="isGfxLoading || !card.video.name"
           [routerLink]="isGfxLoading ? null : card.route"
           [attr.aria-disabled]="isGfxLoading"
-          loading="eager"
-          fetchpriority="high"
-          decoding="sync"
         >
           <div class="gfx-card-visual">
-
-            @if (!isGfxLoading) {
-
-              <!-- IMAGE (GIF) -->
-              @if (card.media.mediaType === 'image' && card.imageUrl) {
-                <img
-                  class="gfx-card-image"
-                  [class.loaded]="card.imageLoaded"
-                  (load)="card.imageLoaded = true"
-                  [src]="card.imageUrl"
-                  [alt]="card.media.alt || 'Work image'"
-                />
+            @if (!isGfxLoading && card.video.name) {
+              @if (card.video.sourceType === 'external' && card.safeUrl) {
+                <iframe
+                  #videoFrame
+                  class="gfx-card-video"
+                  [src]="card.safeUrl"
+                  [title]="card.video.name"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              } @else if (card.video.sourceType === 'upload' && card.uploadUrl) {
+                <video
+                  class="gfx-card-video"
+                  [src]="card.uploadUrl"
+                  [attr.aria-label]="card.video.name"
+                  autoplay
+                  muted
+                  loop
+                  playsinline>
+                </video>
               }
-
-              <!-- VIDEO -->
-              @else if (card.media.mediaType === 'video' && card.media.video) {
-
-                @if (card.media.video.sourceType === 'external' && card.safeUrl) {
-                  <iframe
-                    #videoFrame
-                    class="gfx-card-video"
-                    [src]="card.safeUrl"
-                    [title]="card.media.video.name"
-                    frameborder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen>
-                  </iframe>
-
-                } @else if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
-                  <video
-                    class="gfx-card-video"
-                    [src]="card.uploadUrl"
-                    [attr.aria-label]="card.media.video.name"
-                    autoplay
-                    muted
-                    loop
-                    playsinline>
-                  </video>
-                }
-
-              }
-
             } @else {
               <div class="gfx-card-skeleton-media"></div>
             }
-
           </div>
 
-          @if (!isGfxLoading) {
-
-            @if (card.media.mediaType === 'image') {
-              <span class="gfx-card-name">
-                {{ card.media.alt || 'Image' }}
-              </span>
-            } @else if (card.media.mediaType === 'video' && card.media.video?.name) {
-              <span class="gfx-card-name">
-                {{ card.media.video?.name }}
-              </span>
-            }
-
+          @if (!isGfxLoading && card.video.name) {
+            <span class="gfx-card-name">{{ card.video.name }}</span>
           } @else {
             <span class="gfx-card-skeleton-text"></span>
           }
-
         </a>
       }
     </div>
@@ -100,8 +61,6 @@
     <span>Add Your Team!</span>
   </button>
 </div>
-
-
 
 <div fadeIn class="media-container fade-in">
     <span headerAnimation class="header">Photography + Video</span>

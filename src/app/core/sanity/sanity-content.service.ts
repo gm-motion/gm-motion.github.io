@@ -46,22 +46,13 @@ export class SanityContentService {
       photoVideoParagraph,
       gfxWorkMedia[]{
         route,
-        media{
-          mediaType,
-          alt,
-          video{
-            sourceType,
-            provider,
-            url,
-            name,
-            description,
-            videoFile{
-              asset->{
-                url
-              }
-            }
-          },
-          image{
+        video{
+          sourceType,
+          provider,
+          url,
+          name,
+          description,
+          videoFile{
             asset->{
               url
             }
@@ -126,22 +117,13 @@ export class SanityContentService {
       },
       gfxWorkSection[]{
         route,
-        media{
-          mediaType,
-          alt,
-          video{
-            sourceType,
-            provider,
-            url,
-            name,
-            description,
-            videoFile{
-              asset->{
-                url
-              }
-            }
-          },
-          image{
+        video{
+          sourceType,
+          provider,
+          url,
+          name,
+          description,
+          videoFile{
             asset->{
               url
             }

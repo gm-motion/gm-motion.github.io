@@ -1,4 +1,4 @@
-import { GfxWorkItem, MediaSource } from './commonSchemas';
+import { VideoItem, MediaSource } from './commonSchemas';
 
 export interface PhotoVideoMediaItem {
   media: MediaSource;
@@ -7,6 +7,6 @@ export interface PhotoVideoMediaItem {
 export interface WorkData {
   gfxSubHeader?: string;
   photoVideoParagraph?: string;
-  gfxWorkMedia?: GfxWorkItem[];
+  gfxWorkMedia?: VideoItem[];
   photoVideoMedia?: PhotoVideoMediaItem[];
 }
