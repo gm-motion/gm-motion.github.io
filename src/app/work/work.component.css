@@ -168,9 +168,6 @@
   margin: 1rem;
   text-decoration: none;
   gap: 2rem;
-}
-
-.gx-card:hover {
   cursor: pointer;
 }
 
@@ -186,17 +183,7 @@
   background: var(--color-black);
   box-shadow: var(--shadow-card);
   transition: all 0.2s ease;
-  padding: none;
-}
-
-.gfx-card-video, 
-.gfx-card-image {
-  width: 100%;
-  height: 100%;
-}
-
-.gfx-card-video {
-  pointer-events: none;
+  padding: 0;
 }
 
 .gfx-card-image {
@@ -214,10 +201,11 @@
 
 .media-card-img,
 .media-card-video,
-.gfx-card-img {
+.gfx-card-image {
   width: 100%;
   height: 100%;
   object-fit: contain; /* fills nicely */
+  pointer-events: none;
   display: block;
 }
 
@@ -227,7 +215,7 @@
   transition: transform 0.2s ease, font-weight 0.2s ease;
 }
 
-.gfx-card-name:hover {
+.gfx-card:hover .gfx-card-name {
   font-weight: 550;
 }
 
@@ -275,7 +263,7 @@
 }
 
 .media-card {
-  display: inline-block;
+  display: block;
   width: 100%;
   margin: 0 0 2rem;
   break-inside: avoid;
@@ -293,7 +281,6 @@
 
 .media-card-visual:hover {
   transform: scale(1.02);
-  cursor: pointer;
 }
 
 .media-card-img {
