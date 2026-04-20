@@ -122,6 +122,9 @@
             class="work-card-image"
             [src]="work.media.imageUrl"
             [alt]="work.media.alt || 'Work image'"
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
           />
         }
       </div>
