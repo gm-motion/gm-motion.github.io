@@ -232,15 +232,6 @@ export class WorkComponent implements OnInit, AfterViewInit {
     });
   }
 
-  playHoverVideo(videoEl: HTMLVideoElement): void {
-    videoEl.play().catch(() => {});
-  }
-
-  pauseHoverVideo(videoEl: HTMLVideoElement): void {
-    videoEl.pause();
-    videoEl.currentTime = 0;
-  }
-
   @HostListener('window:orientationchange')
   @HostListener('window:resize')
   onViewportChange(): void {

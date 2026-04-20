@@ -82,7 +82,7 @@
               class="media-card-img"
               loading="eager"
               fetchpriority="high"
-              decoding="sync"
+              decoding="async"
             />
           }
 
@@ -90,35 +90,14 @@
 
             @if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
               <video
-                #hoverVideo
                 class="media-card-video"
                 [src]="card.uploadUrl"
                 [attr.aria-label]="card.media.video.name"
-                muted
+                autoplay
+                [muted]="true"
                 loop
                 playsinline
-                preload="metadata"
-                (mouseenter)="playHoverVideo(hoverVideo)"
-                (mouseleave)="pauseHoverVideo(hoverVideo)">
-              </video>
-            }
-
-            @else if (
-              card.media.mediaType === 'video' &&
-              card.media.video &&
-              card.uploadUrl
-            ) {
-              <video
-                #hoverVideo
-                class="media-card-video"
-                [src]="card.uploadUrl"
-                [attr.aria-label]="card.media.video.name"
-                muted
-                loop
-                playsinline
-                preload="metadata"
-                (mouseenter)="playHoverVideo(hoverVideo)"
-                (mouseleave)="pauseHoverVideo(hoverVideo)">
+                preload="metadata">
               </video>
             }
 
@@ -132,6 +111,7 @@
                 allowfullscreen>
               </iframe>
             }
+
           }
 
         </div>
