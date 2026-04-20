@@ -1,7 +1,11 @@
 <div class="title-container">
   <div class="title-video">
     <div class="title-video-frame">
-      @if (titleVideo?.mediaType === 'video' && titleVideo?.video?.sourceType === 'upload' && titleVideo?.uploadUrl) {
+      @if (
+        titleVideo?.mediaType === 'video' &&
+        titleVideo?.video?.sourceType === 'upload' &&
+        titleVideo?.uploadUrl
+      ) {
         <video
           [src]="titleVideo?.uploadUrl"
           autoplay
@@ -11,7 +15,11 @@
         ></video>
       }
 
-      @if (titleVideo?.mediaType === 'video' && titleVideo?.video?.sourceType === 'external' && titleVideo?.safeUrl) {
+      @if (
+        titleVideo?.mediaType === 'video' &&
+        titleVideo?.video?.sourceType === 'external' &&
+        titleVideo?.safeUrl
+      ) {
         <iframe
           #titleVideoFrame
           [src]="titleVideo?.safeUrl"
