@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChildren('workVideoFrame') workVideoFrames!: QueryList<
     ElementRef<HTMLIFrameElement>
   >;
+  @ViewChild('group') group?: ElementRef<HTMLElement>;
 
   homeVideoStack: ResolvedMediaSource[] = Array.from({ length: 3 }, () => ({
     mediaType: 'video',
@@ -77,6 +78,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   gfxWorkSection: ResolvedGfxWorkItem[] = [];
   partneredClientsSection: PartneredClientItem[] = [];
+
+  scrollDistance = 0;
+
+  private carouselLoadScheduled = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -123,9 +128,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       requestAnimationFrame(() => {
         this.updateStackCards();
-        this.retryTitleVideo();
-        this.retryStackVideos();
-        this.retryWorkVideos();
+        // this.retryTitleVideo();
+        // // this.retryStackVideos();
+        // this.retryWorkVideos();
       });
 
       this.cdr.markForCheck();
@@ -137,12 +142,41 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.updateStackCards();
 
-    this.retryTitleVideo();
-    this.retryStackVideos();
-    this.retryWorkVideos();
+    // this.retryTitleVideo();
+    // // this.retryStackVideos();
+    // this.retryWorkVideos();
 
-    setTimeout(() => this.restartCarouselAnimation(), 100);
-    setTimeout(() => this.restartCarouselAnimation(), 500);
+    this.scheduleCarouselRefresh();
+    setTimeout(() => this.scheduleCarouselRefresh(), 100);
+  }
+
+  onCarouselImageLoad(): void {
+    this.scheduleCarouselRefresh();
+  }
+
+  private scheduleCarouselRefresh(): void {
+    if (this.carouselLoadScheduled) return;
+    this.carouselLoadScheduled = true;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.carouselLoadScheduled = false;
+        this.refreshCarouselAnimation();
+      });
+    });
+  }
+
+  private refreshCarouselAnimation(): void {
+    const carouselEl = this.carousel?.nativeElement;
+    const groupEl = this.group?.nativeElement;
+
+    if (!carouselEl || !groupEl) return;
+
+    this.scrollDistance = groupEl.scrollWidth;
+
+    carouselEl.style.animation = 'none';
+    void carouselEl.offsetWidth;
+    carouselEl.style.animation = '';
   }
 
   private resolveMediaSource(media: MediaSource): ResolvedMediaSource {
@@ -195,20 +229,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  @HostListener('window:orientationchange')
-  @HostListener('window:resize')
-  onViewportChange(): void {
-    this.restartCarouselAnimation();
-    this.retryTitleVideo();
-    this.retryStackVideos();
-    this.retryWorkVideos();
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.updateStackCards();
   }
 
-  private restartCarouselAnimation(): void {
-    const el = this.carousel?.nativeElement;
-    if (!el) return;
+  @HostListener('window:resize')
+  @HostListener('window:orientationchange')
+  onWindowResize(): void {
+    this.scheduleCarouselRefresh();
 
-    this.videoPlayer.restartAnimation(el);
+    if (this.isMobile()) {
+      this.clearStackCardInlineStyles();
+    } else {
+      this.updateStackCards();
+    }
+
+    // this.retryTitleVideo();
+    // this.retryStackVideos();
+    // this.retryWorkVideos();
   }
 
   private isRetryableProvider(
@@ -283,12 +322,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.videoPlayer.retryAllVideos(videos, 500);
     this.videoPlayer.retryAllVideos(videos, 1300);
-  }
-
-  @HostListener('window:scroll')
-  @HostListener('window:resize')
-  onScrollOrResize() {
-    this.updateStackCards();
   }
 
   private clamp(value: number, min: number, max: number): number {
@@ -413,23 +446,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  @HostListener('window:resize')
-  onResize(): void {
-    if (this.isMobile()) {
-      // clear any inline styles the JS may have already set
-      this.stackCards?.forEach((cardRef) => {
-        const card = cardRef.nativeElement;
-        card.style.height = '';
-        card.style.top = '';
-        card.style.left = '';
-        card.style.transform = '';
-        card.style.zIndex = '';
-      });
-      if (this.stackStage) {
-        this.stackStage.nativeElement.style.height = '';
-      }
-      return;
+  private clearStackCardInlineStyles(): void {
+    this.stackCards?.forEach((cardRef) => {
+      const card = cardRef.nativeElement;
+      card.style.height = '';
+      card.style.top = '';
+      card.style.left = '';
+      card.style.transform = '';
+      card.style.zIndex = '';
+    });
+
+    if (this.stackStage) {
+      this.stackStage.nativeElement.style.height = '';
     }
-    this.updateStackCards();
   }
 }
