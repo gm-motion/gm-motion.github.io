@@ -368,7 +368,8 @@
   justify-content: center;
 }
 
-.work-card-video {
+.work-card-video,
+.work-card-image {
   height: 100%;
   width: 100%;
 }

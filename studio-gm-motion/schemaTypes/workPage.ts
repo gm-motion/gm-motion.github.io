@@ -64,34 +64,33 @@ export default defineType({
       title: 'Photography + Video Media',
       type: 'array',
       of: [
-        defineField({
-          name: 'mediaItem',
-          title: 'Media Item',
+        {
           type: 'object',
+          name: 'photoVideoItem',
+          title: 'Photo / Video Item',
           fields: [
             defineField({
-              name: 'name',
-              type: 'string',
-            }),
-            defineField({
-              name: 'img',
-              type: 'image',
-              options: {hotspot: true},
-              fields: [
-                defineField({
-                  name: 'alt',
-                  type: 'string',
-                }),
-              ],
+              name: 'media',
+              title: 'Media Source',
+              type: 'mediaSource',
             }),
           ],
           preview: {
             select: {
-              title: 'name',
-              media: 'img',
+              mediaType: 'media.mediaType',
+              videoName: 'media.video.name',
+              image: 'media.image',
+              alt: 'media.alt',
+            },
+            prepare({mediaType, videoName, image, alt}) {
+              return {
+                title: mediaType === 'video' ? videoName || 'Video' : alt || 'Image',
+                subtitle: mediaType === 'video' ? 'Video' : 'Image',
+                media: mediaType === 'image' ? image : undefined,
+              }
             },
           },
-        }),
+        },
       ],
     }),
   ],

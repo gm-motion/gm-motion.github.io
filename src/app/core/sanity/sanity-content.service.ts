@@ -69,12 +69,26 @@ export class SanityContentService {
         }
       },
       photoVideoMedia[]{
-        name,
-        img{
-          asset->{
-            url
+        media{
+          mediaType,
+          alt,
+          video{
+            sourceType,
+            provider,
+            url,
+            name,
+            description,
+            videoFile{
+              asset->{
+                url
+              }
+            }
           },
-          alt
+          image{
+            asset->{
+              url
+            }
+          }
         }
       }
     }`;
@@ -112,13 +126,22 @@ export class SanityContentService {
       },
       gfxWorkSection[]{
         route,
-        video{
-          sourceType,
-          provider,
-          url,
-          name,
-          description,
-          videoFile{
+        media{
+          mediaType,
+          alt,
+          video{
+            sourceType,
+            provider,
+            url,
+            name,
+            description,
+            videoFile{
+              asset->{
+                url
+              }
+            }
+          },
+          image{
             asset->{
               url
             }
@@ -135,9 +158,6 @@ export class SanityContentService {
         }
       }
     }`;
-
-    const result = await sanityClient.fetch(query);
-    console.log('RAW homePage result:', result);
 
     return sanityClient.fetch<HomeData | null>(query);
   }

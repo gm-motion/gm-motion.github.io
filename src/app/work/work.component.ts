@@ -14,8 +14,8 @@ import { RouterLink } from '@angular/router';
 import { FadeInDirective } from '../core/directives/fade-in.directive';
 import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
 import { SanityContentService } from '../core/sanity/sanity-content.service';
-import { VideoItem, VideoSource } from '../core/models/sanity/commonSchemas';
-import { PhotoVideoMediaItem, GfxWorkItem } from '../core/models/sanity/workPage';
+import { VideoSource } from '../core/models/sanity/commonSchemas';
+import { GfxWorkItem } from '../core/models/sanity/commonSchemas';
 import { VideoPlayerService } from '../core/services/video-player.service';
 import { VideoProvider } from '../core/models/video.types';
 
@@ -34,6 +34,14 @@ interface MediaSource {
 
 interface GfxCard {
   route: string;
+  media: MediaSource;
+  safeUrl?: SafeResourceUrl;
+  uploadUrl?: string;
+  imageUrl?: string;
+  imageLoaded?: boolean;
+}
+
+interface PhotoVideoCard {
   media: MediaSource;
   safeUrl?: SafeResourceUrl;
   uploadUrl?: string;
@@ -58,7 +66,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
   photoVideoParagraph = '';
 
   gfxWorkMedia: GfxWorkItem[] = [];
-  photoVideoMedia: PhotoVideoMediaItem[] = [];
+  photoVideoMedia: PhotoVideoCard[] = [];
 
   isGfxLoading = true;
 
@@ -110,7 +118,9 @@ export class WorkComponent implements OnInit, AfterViewInit {
       }
 
       if (workPageData?.photoVideoMedia?.length) {
-        this.photoVideoMedia = [...workPageData.photoVideoMedia];
+        this.photoVideoMedia = this.buildPhotoVideoMedia(
+          workPageData.photoVideoMedia,
+        );
       }
 
       this.cdr.markForCheck();
@@ -193,6 +203,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
             : undefined,
           uploadUrl,
           imageUrl,
+          imageLoaded: false,
         };
       });
 
@@ -200,6 +211,55 @@ export class WorkComponent implements OnInit, AfterViewInit {
     }
 
     return rows;
+  }
+
+  private buildPhotoVideoMedia(
+    items: { media: MediaSource }[],
+  ): PhotoVideoCard[] {
+    return items.map((item) => {
+      let safeUrl: SafeResourceUrl | undefined;
+      let uploadUrl: string | undefined;
+      let imageUrl: string | undefined;
+
+      if (item.media.mediaType === 'video' && item.media.video) {
+        const video = item.media.video;
+
+        if (video.sourceType === 'external') {
+          if (
+            (video.provider === 'vimeo' || video.provider === 'youtube') &&
+            video.url
+          ) {
+            safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+              this.videoPlayer.buildEmbedUrl(video.url, video.provider),
+            );
+          } else if (video.provider === 'direct' && video.url) {
+            uploadUrl = video.url;
+          }
+        } else if (video.sourceType === 'upload') {
+          uploadUrl = video.videoFile?.asset?.url || '';
+        }
+      }
+
+      if (item.media.mediaType === 'image') {
+        imageUrl = item.media.image?.asset?.url || '';
+      }
+
+      return {
+        media: item.media,
+        safeUrl,
+        uploadUrl,
+        imageUrl,
+      };
+    });
+  }
+
+  playHoverVideo(videoEl: HTMLVideoElement): void {
+    videoEl.play().catch(() => {});
+  }
+
+  pauseHoverVideo(videoEl: HTMLVideoElement): void {
+    videoEl.pause();
+    videoEl.currentTime = 0;
   }
 
   @HostListener('window:orientationchange')

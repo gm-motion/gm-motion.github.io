@@ -19,3 +19,7 @@ To manage Sanity Studio account:
 ```
 https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU
 ```
+To deploy sanity:
+```
+npx sanity deploy
+```
