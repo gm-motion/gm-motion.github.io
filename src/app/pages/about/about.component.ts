@@ -1,4 +1,4 @@
-import { SanityContentService } from '../core/sanity/sanity-content.service';
+import { SanityContentService } from '../../core/sanity/sanity-content.service';
 import {
   AfterViewInit,
   OnInit,
@@ -10,15 +10,20 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TimelineItem } from '../core/models/sanity/aboutPage';
-import { Paragraph } from '../core/models/sanity/commonSchemas';
+import { TimelineItem } from '../../core/models/sanity/aboutPage';
+import { Paragraph } from '../../core/models/sanity/commonSchemas';
 import { RouterLink } from '@angular/router';
-import { FadeInDirective } from '../core/directives/fade-in.directive';
-import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
+import { FadeInDirective } from '../../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../../core/directives/header-animation.directive';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, RouterLink, FadeInDirective, HeaderAnimationDirective],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FadeInDirective,
+    HeaderAnimationDirective,
+  ],
   standalone: true,
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',

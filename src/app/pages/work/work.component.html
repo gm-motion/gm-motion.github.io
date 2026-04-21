@@ -4,7 +4,6 @@
     <span headerAnimation class="header">GFX Work</span>
     <div class="gfx-info">
         <span>{{gfxSubHeader}}</span>
-
         <div>Click on a project to view in more detail.</div>
     </div>
 </div>
@@ -15,26 +14,26 @@
       @for (card of row; track $index) {
         <a
           class="gfx-card"
-          [class.gfx-card-loading]="isGfxLoading || !card.video.name"
+          [class.gfx-card-loading]="isGfxLoading || !card.thumbnail.name"
           [routerLink]="isGfxLoading ? null : card.route"
           [attr.aria-disabled]="isGfxLoading"
         >
           <div class="gfx-card-visual">
-            @if (!isGfxLoading && card.video.name) {
-              @if (card.video.sourceType === 'external' && card.safeUrl) {
+            @if (!isGfxLoading && card.thumbnail.name) {
+              @if (card.thumbnail.sourceType === 'external' && card.safeUrl) {
                 <iframe
                   class="gfx-card-video"
                   [src]="card.safeUrl"
-                  [title]="card.video.name"
+                  [title]="card.thumbnail.name"
                   frameborder="0"
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowfullscreen>
                 </iframe>
-              } @else if (card.video.sourceType === 'upload' && card.uploadUrl) {
+              } @else if (card.thumbnail.sourceType === 'upload' && card.uploadUrl) {
                 <video
                   class="gfx-card-video"
                   [src]="card.uploadUrl"
-                  [attr.aria-label]="card.video.name"
+                  [attr.aria-label]="card.thumbnail.name"
                   autoplay
                   muted
                   loop
@@ -46,8 +45,8 @@
             }
           </div>
 
-          @if (!isGfxLoading && card.video.name) {
-            <span class="gfx-card-name">{{ card.video.name }}</span>
+          @if (!isGfxLoading && card.thumbnail.name) {
+            <span class="gfx-card-name">{{ card.title }}</span>
           } @else {
             <span class="gfx-card-skeleton-text"></span>
           }

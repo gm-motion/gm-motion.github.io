@@ -5,7 +5,8 @@ import { sanityClient } from './sanity.client';
 import { AboutData } from '../models/sanity/aboutPage';
 import { HeaderFooterData } from '../models/sanity/headerFooter';
 import { HomeData } from '../models/sanity/homePage';
-import { WorkData } from '../models/sanity/workPage';
+import { WorkData, GfxProjectThumbnail } from '../models/sanity/workPage';
+import { GfxProject } from '../models/sanity/gfxProjectPage';
 
 @Injectable({
   providedIn: 'root',
@@ -41,25 +42,84 @@ export class SanityContentService {
   }
 
   async getWorkPage(): Promise<WorkData | null> {
-    const query = `*[_type == "workPage"][0]{
-      gfxSubHeader,
-      photoVideoParagraph,
-      gfxWorkMedia[]{
-        route,
-        video{
-          sourceType,
-          provider,
-          url,
-          name,
-          description,
-          videoFile{
-            asset->{
-              url
+    const workPageQuery = `*[_type == "workPage"][0]{
+        gfxSubHeader,
+        photoVideoParagraph,
+        photoVideoMedia[]{
+          media{
+            mediaType,
+            alt,
+            video{
+              sourceType,
+              provider,
+              url,
+              name,
+              description,
+              videoFile{
+                asset->{
+                  url
+                }
+              }
+            },
+            image{
+              asset->{
+                url
+              }
             }
           }
         }
+      }`;
+
+    const gfxProjectsQuery = `*[_type == "gfxProject"] | order(_createdAt desc){
+      title,
+      "route": "/gfx-work/" + slug.current,
+      thumbnail{
+        sourceType,
+        provider,
+        url,
+        name,
+        description,
+        videoFile{
+          asset->{
+            url
+          }
+        }
+      }
+    }`;
+
+    const [workPage, gfxProjects] = await Promise.all([
+      sanityClient.fetch<WorkData | null>(workPageQuery),
+      sanityClient.fetch<GfxProjectThumbnail[]>(gfxProjectsQuery),
+    ]);
+
+    if (!workPage) return null;
+
+    return {
+      ...workPage,
+      gfxProjects,
+    };
+  }
+
+  async getWorkProjectBySlug(slug: string): Promise<GfxProject | null> {
+    const query = `*[_type == "gfxProject" && slug.current == $slug][0]{
+      title,
+      subheader,
+      "slug": slug.current,
+      thumbnail{
+        sourceType,
+        provider,
+        url,
+        name,
+        description,
+        videoFile{
+          asset->{
+            url
+          }
+        }
       },
-      photoVideoMedia[]{
+      sections[]{
+        subheader,
+        paragraph,
         media{
           mediaType,
           alt,
@@ -84,7 +144,10 @@ export class SanityContentService {
       }
     }`;
 
-    return sanityClient.fetch<WorkData | null>(query);
+    const result = sanityClient.fetch<GfxProject | null>(query, { slug });
+    console.log("Result: ", result);
+
+    return sanityClient.fetch<GfxProject | null>(query, { slug });
   }
 
   async getHomePage(): Promise<HomeData | null> {

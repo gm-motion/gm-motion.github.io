@@ -2,12 +2,12 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, El
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {RouterLink} from '@angular/router';
 
-import {FadeInDirective} from '../core/directives/fade-in.directive';
-import {HeaderAnimationDirective} from '../core/directives/header-animation.directive';
-import {Paragraph, VideoItem, VideoSource,} from '../core/models/sanity/commonSchemas';
-import {HomeData, PartneredClientItem} from '../core/models/sanity/homePage';
-import {SanityContentService} from '../core/sanity/sanity-content.service';
-import {VideoPlayerService} from '../core/services/video-player.service';
+import {FadeInDirective} from '../../core/directives/fade-in.directive';
+import {HeaderAnimationDirective} from '../../core/directives/header-animation.directive';
+import {Paragraph, VideoItem, VideoSource,} from '../../core/models/sanity/commonSchemas';
+import {HomeData, PartneredClientItem} from '../../core/models/sanity/homePage';
+import {SanityContentService} from '../../core/sanity/sanity-content.service';
+import {VideoPlayerService} from '../../core/services/video-player.service';
 
 
 interface ResolvedVideoSource extends VideoSource {

@@ -3,8 +3,8 @@ import {
   signal,
 } from '@angular/core';
 import emailjs from 'emailjs-com';
-import { FadeInDirective } from '../core/directives/fade-in.directive';
-import { HeaderAnimationDirective } from '../core/directives/header-animation.directive';
+import { FadeInDirective } from '../../core/directives/fade-in.directive';
+import { HeaderAnimationDirective } from '../../core/directives/header-animation.directive';
 
 @Component({
   selector: 'app-contact',
