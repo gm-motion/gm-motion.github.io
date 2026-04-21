@@ -20,38 +20,6 @@ export default defineType({
       rows: 5,
     }),
     defineField({
-      name: 'gfxWorkMedia',
-      title: 'GFX Work Media',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'workItem',
-          title: 'Work Item',
-          fields: [
-            defineField({
-              name: 'video',
-              title: 'GFX Work Video',
-              type: 'videoSource',
-            }),
-            defineField({
-              name: 'route',
-              title: 'Route',
-              type: 'string',
-              description: 'Project route (e.g. /gfx-work/{project-name})',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'video.name',
-              subtitle: 'route',
-            },
-          },
-        },
-      ],
-    }),
-    defineField({
       name: 'photoVideoMedia',
       title: 'Photography + Video Media',
       type: 'array',

@@ -1,0 +1,218 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.spacer,
+.gfx-project-title-container,
+.gfx-project-sections {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.spacer {
+  background: var(--color-bg);
+  width: 100vw;
+  height: calc(10vh + 4rem);
+}
+
+.gfx-project-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  gap: 2rem;
+  height: auto;
+}
+
+.header {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  font-size: var(--font-header2);
+  padding-bottom: 1.2rem;
+}
+
+.header::before,
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 10px;
+  width: calc(50% - 0.5rem);
+  border: 3px solid var(--color-primary);
+  border-bottom: 0;
+
+  transform: scaleX(0);
+  transition: transform 3.0s ease;
+}
+
+.header::before {
+  left: 0;
+  border-left: 0;
+  border-radius: 0 2.5rem 0 0;
+  transform-origin: right;
+}
+
+.header::after {
+  right: 0;
+  border-right: 0;
+  border-radius: 2.5rem 0 0 0;
+  transform-origin: left;
+}
+
+.header.visible::before,
+.header.visible::after {
+  transform: scaleX(1);
+}
+
+.gfx-project-title-container .subheader {
+  text-align: center;
+  font-size: var(--font-title);
+}
+
+.gfx-project-sections {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 3rem 0;
+  gap: 3rem;
+}
+
+.gfx-project-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  width: 65vw;
+  gap: 2rem;
+  margin: 0 auto;
+}
+
+.gfx-project-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.section-subheader {
+  text-align: center;
+  font-weight: 550;
+  font-size: var(--font-title);
+  margin: 1rem 0rem;
+  width: 100%;
+  height: auto;
+}
+
+.section-paragraph {
+  text-align: center;
+  font-size: var(--font-paragraph);
+  margin: 1rem 0rem;
+  width: 100%;
+  height: auto;
+}
+
+.gfx-media-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.gfx-image-title,
+.gfx-video-title {
+  font-size: var(--font-title);
+  text-align: center;
+}
+
+.gfx-project-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  box-shadow: var(--shadow-card);
+  background: var(--color-black);
+}
+
+.gfx-project-image {
+  display: block;
+  width: 400px;
+  height: auto;
+}
+
+/* ===== Skeleton Base ===== */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+/* Shimmer animation */
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== Specific Skeleton Sizes ===== */
+
+.skeleton-header {
+  width: 40%;
+  height: 2.5rem;
+}
+
+.skeleton-subheader {
+  width: 60%;
+  height: 1.5rem;
+}
+
+.skeleton-paragraph {
+  width: 90%;
+  height: 1rem;
+}
+
+.skeleton-media-title {
+  width: 50%;
+  height: 1.5rem;
+}
+
+.skeleton-media {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(var(--fade-height));
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

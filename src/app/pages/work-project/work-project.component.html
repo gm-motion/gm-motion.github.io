@@ -1,0 +1,97 @@
+<div class="spacer"></div>
+
+
+<div class="gfx-project-title-container">
+  @if (isLoading()) {
+    <div class="skeleton skeleton-header"></div>
+    <div class="skeleton skeleton-subheader"></div>
+  } @else {
+    <span headerAnimation class="header">{{ project()?.title }}</span>
+    <div class="subheader">
+      {{ project()?.subheader}}
+      <!-- {{ project()?.subheader }} | {{ project()?.subheader }} | {{ project()?.subheader }} -->
+    </div>
+  }
+</div>
+
+<section class="gfx-project-sections">
+  @if (isLoading()) {
+    <article class="gfx-project-section">
+      <div class="gfx-project-info-container">
+        <div class="skeleton skeleton-subheader"></div>
+        <div class="skeleton skeleton-paragraph"></div>
+      </div>
+
+      <div class="gfx-media-container">
+        <div class="skeleton skeleton-media-title"></div>
+        <div class="skeleton skeleton-media"></div>
+      </div>
+    </article>
+  } @else {
+      @for (section of project()?.sections; track $index) {
+        <article fadeIn class="gfx-project-section fade-in">
+          <div class="gfx-project-info-container">
+            @if (section.subheader) {
+              <h2 class="section-subheader">{{ section.subheader }}</h2>
+            }
+
+            @if (section.paragraph) {
+              <p class="section-paragraph">{{ section.paragraph }}</p>
+            }
+          </div>
+
+          <div class="gfx-media-container">
+
+            <!-- IMAGE -->
+            @if (section.imageUrl) {
+              <span class="gfx-image-title">
+                {{ section.media.alt || section.subheader || 'Project image' }}
+              </span>
+              <img
+                [src]="section.imageUrl"
+                [alt]="section.media.alt || 'Media image'"
+                class="gfx-project-image"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              />
+            }
+
+            <!-- VIDEO: upload -->
+            @else if (section.uploadUrl) {
+              <span class="gfx-video-title">
+                {{ section.media.video?.name || section.subheader || 'Project video' }}
+              </span>
+              <video
+                class="gfx-project-video"
+                [src]="section.uploadUrl"
+                [attr.aria-label]="section.media.video?.name"
+                autoplay
+                [muted]="true"
+                loop
+                playsinline
+                preload="metadata">
+              </video>
+            }
+
+            <!-- VIDEO: external -->
+            @else if (section.safeUrl) {
+              <span class="gfx-video-title">
+                {{ section.media.video?.name || section.subheader || 'Project video' }}
+              </span>
+              <iframe
+                class="gfx-project-video"
+                [src]="section.safeUrl"
+                [title]="section.media.video?.name"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            }
+
+          </div>
+        </article>
+      }
+  }
+</section>
+
