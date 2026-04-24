@@ -5,7 +5,8 @@ import { sanityClient } from './sanity.client';
 import { AboutData } from '../models/sanity/aboutPage';
 import { HeaderFooterData } from '../models/sanity/headerFooter';
 import { HomeData } from '../models/sanity/homePage';
-import { WorkData, GfxProjectThumbnail } from '../models/sanity/workPage';
+import { WorkData } from '../models/sanity/workPage';
+import { GfxProjectThumbnail } from '../models/sanity/commonSchemas';
 import { GfxProject } from '../models/sanity/gfxProjectPage';
 
 @Injectable({
@@ -119,8 +120,16 @@ export class SanityContentService {
       },
       sections[]{
         subheader,
-        paragraph,
-        media{
+        banner{
+          asset->{
+            url
+          },
+          alt
+        },
+        paragraphs,
+        columns,
+        mediaHeader,
+        mediaItems[]{
           mediaType,
           alt,
           video{
@@ -144,14 +153,11 @@ export class SanityContentService {
       }
     }`;
 
-    const result = sanityClient.fetch<GfxProject | null>(query, { slug });
-    console.log("Result: ", result);
-
     return sanityClient.fetch<GfxProject | null>(query, { slug });
   }
 
   async getHomePage(): Promise<HomeData | null> {
-    const query = `*[_type == "homePage"][0]{
+    const homePageQuery = `*[_type == "homePage"][0]{
       titleVideo{
         sourceType,
         provider,
@@ -178,21 +184,6 @@ export class SanityContentService {
           }
         }
       },
-      gfxWorkSection[]{
-        route,
-        video{
-          sourceType,
-          provider,
-          url,
-          name,
-          description,
-          videoFile{
-            asset->{
-              url
-            }
-          }
-        }
-      },
       partneredClientsSection[]{
         client,
         img{
@@ -204,7 +195,33 @@ export class SanityContentService {
       }
     }`;
 
-    return sanityClient.fetch<HomeData | null>(query);
+    const gfxProjectsQuery = `*[_type == "gfxProject"] 
+    | order(_createdAt desc)[0...3]{
+      title,
+      "route": "/gfx-work/" + slug.current,
+      thumbnail{
+        sourceType,
+        provider,
+        url,
+        name,
+        description,
+        videoFile{
+          asset->{
+            url
+          }
+        }
+      }
+    }`;
+
+    const [homePage, gfxProjects] = await Promise.all([
+      sanityClient.fetch<HomeData|null>(homePageQuery),
+      sanityClient.fetch<GfxProjectThumbnail[]>(gfxProjectsQuery),
+    ]);
+
+    return {
+      ...homePage,
+      gfxProjects,
+    };
   }
 
   async getHeaderFooter(): Promise<HeaderFooterData | null> {

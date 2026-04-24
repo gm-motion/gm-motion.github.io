@@ -1,6 +1,5 @@
 <div class="spacer"></div>
 
-
 <div class="gfx-project-title-container">
   @if (isLoading()) {
     <div class="skeleton skeleton-header"></div>
@@ -8,8 +7,7 @@
   } @else {
     <span headerAnimation class="header">{{ project()?.title }}</span>
     <div class="subheader">
-      {{ project()?.subheader}}
-      <!-- {{ project()?.subheader }} | {{ project()?.subheader }} | {{ project()?.subheader }} -->
+      {{ project()?.subheader }}
     </div>
   }
 </div>
@@ -20,78 +18,91 @@
       <div class="gfx-project-info-container">
         <div class="skeleton skeleton-subheader"></div>
         <div class="skeleton skeleton-paragraph"></div>
+        <div class="skeleton skeleton-paragraph"></div>
       </div>
 
       <div class="gfx-media-container">
-        <div class="skeleton skeleton-media-title"></div>
         <div class="skeleton skeleton-media"></div>
       </div>
     </article>
   } @else {
-      @for (section of project()?.sections; track $index) {
-        <article fadeIn class="gfx-project-section fade-in">
-          <div class="gfx-project-info-container">
-            @if (section.subheader) {
-              <h2 class="section-subheader">{{ section.subheader }}</h2>
-            }
+    @for (section of project()?.sections; track $index) {
+      <article fadeIn class="gfx-project-section fade-in">
+        <div class="gfx-project-info-container">
+          @if (section.subheader) {
+            <h2 class="section-subheader">{{ section.subheader }}</h2>
+          }
 
-            @if (section.paragraph) {
-              <p class="section-paragraph">{{ section.paragraph }}</p>
+          @if (section.banner?.asset?.url) {
+            <img
+              class="gfx-section-banner"
+              [src]="section.banner?.asset?.url"
+              [alt]="section.banner?.alt || section.subheader || 'Section banner'"
+              loading="eager"
+              decoding="async"
+            />
+          }
+
+          @if (section.paragraphs?.length) {
+            @for (paragraph of section.paragraphs; track $index) {
+              <p class="section-paragraph">{{ paragraph }}</p>
             }
+          }
+
+        </div>
+
+        @if (section.mediaItems.length) {
+          <div class="gfx-media-title-container">
+            <h2 class="media-header">{{section.mediaHeader}} </h2>
+            <div
+              class="gfx-media-grid"
+              [class.single-column]="(section.columns || 1) === 1"
+              [style.grid-template-columns]="'repeat(' + (section.columns || 1) + ', minmax(0, 1fr))'"
+            >
+            @for (media of section.mediaItems; track $index) {
+              <div class="gfx-media-container">
+                @if (media.imageUrl) {
+                  <img
+                    [src]="media.imageUrl"
+                    [alt]="media.alt || 'Media image'"
+                    class="gfx-project-image"
+                    [class.is-portrait]="media.aspectRatio !== undefined && media.aspectRatio < 1"
+                    (load)="setImageAspectRatio(media, $event, section)"
+                  />
+                }
+
+                @else if (media.uploadUrl) {
+                  <video
+                    class="gfx-project-video"
+                    [src]="media.uploadUrl"
+                    [class.is-portrait]="media.aspectRatio !== undefined && media.aspectRatio < 1"
+                    (loadedmetadata)="setVideoAspectRatio(media, $event, section)"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                  ></video>
+                }
+
+                @else if (media.safeUrl) {
+                  <iframe
+                    class="gfx-project-video"
+                    [src]="media.safeUrl"
+                    [class.is-portrait]="media.aspectRatio !== undefined && media.aspectRatio < 1"
+                    (load)="setExternalVideoAspectRatio(media, section)"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                }
+              </div>
+            }
+            </div>
           </div>
 
-          <div class="gfx-media-container">
-
-            <!-- IMAGE -->
-            @if (section.imageUrl) {
-              <span class="gfx-image-title">
-                {{ section.media.alt || section.subheader || 'Project image' }}
-              </span>
-              <img
-                [src]="section.imageUrl"
-                [alt]="section.media.alt || 'Media image'"
-                class="gfx-project-image"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-              />
-            }
-
-            <!-- VIDEO: upload -->
-            @else if (section.uploadUrl) {
-              <span class="gfx-video-title">
-                {{ section.media.video?.name || section.subheader || 'Project video' }}
-              </span>
-              <video
-                class="gfx-project-video"
-                [src]="section.uploadUrl"
-                [attr.aria-label]="section.media.video?.name"
-                autoplay
-                [muted]="true"
-                loop
-                playsinline
-                preload="metadata">
-              </video>
-            }
-
-            <!-- VIDEO: external -->
-            @else if (section.safeUrl) {
-              <span class="gfx-video-title">
-                {{ section.media.video?.name || section.subheader || 'Project video' }}
-              </span>
-              <iframe
-                class="gfx-project-video"
-                [src]="section.safeUrl"
-                [title]="section.media.video?.name"
-                frameborder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowfullscreen>
-              </iframe>
-            }
-
-          </div>
-        </article>
-      }
+        }
+      </article>
+    }
   }
 </section>
 

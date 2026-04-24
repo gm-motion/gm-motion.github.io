@@ -12,16 +12,62 @@ export default defineType({
     }),
 
     defineField({
-      name: 'paragraph',
-      title: 'Paragraph',
-      type: 'text',
-      rows: 4,
+      name: 'banner',
+      title: 'Banner Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+        },
+      ],
     }),
 
     defineField({
-      name: 'media',
-      title: 'Media',
-      type: 'mediaSource',
+      name: 'paragraphs',
+      title: 'Paragraphs',
+      type: 'array',
+      of: [{type: 'text'}],
+    }),
+
+    defineField({
+      name: 'columns',
+      title: 'Columns',
+      type: 'number',
+      initialValue: 1,
+      validation: (Rule) => Rule.required().integer().min(1),
+    }),
+
+    defineField({
+      name: 'mediaHeader',
+      title: 'Media Items Title',
+      type: 'string',
+    }),
+
+    defineField({
+      name: 'mediaItems',
+      title: 'Images / Videos',
+      type: 'array',
+      of: [{type: 'mediaSource'}],
     }),
   ],
+
+  preview: {
+    select: {
+      title: 'subheader',
+      media: 'banner',
+      mediaItems: 'mediaItems',
+    },
+    prepare({title, media, mediaItems}) {
+      return {
+        title: title || 'Untitled section',
+        subtitle: `${mediaItems?.length || 0} media item(s)`,
+        media,
+      }
+    },
+  },
 })

@@ -1,13 +1,7 @@
-import { VideoSource, MediaSource } from './commonSchemas';
+import { MediaSource, GfxProjectThumbnail } from './commonSchemas';
 
 export interface PhotoVideoMediaItem {
   media: MediaSource;
-}
-
-export interface GfxProjectThumbnail {
-  title: string;
-  route: string;
-  thumbnail: VideoSource;
 }
 
 export interface WorkData {

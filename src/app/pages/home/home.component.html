@@ -93,10 +93,10 @@
 
     <a class="work-card" [routerLink]="work.route">
       <div class="work-card-visual">
-        @if (work.video.sourceType === 'upload' && work.video.uploadUrl) {
+        @if (work.thumbnail.sourceType === 'upload' && work.uploadUrl) {
           <video
             class="work-card-video"
-            [src]="work.video.uploadUrl"
+            [src]="work.uploadUrl"
             autoplay
             muted
             loop
@@ -104,11 +104,11 @@
           </video>
         }
 
-        @if (work.video.sourceType === 'external' && work.video.safeUrl) {
+        @if (work.thumbnail.sourceType === 'external' && work.safeUrl) {
           <iframe
             class="work-card-video"
-            [src]="work.video.safeUrl"
-            [title]="work.video.name"
+            [src]="work.safeUrl"
+            [title]="work.thumbnail.name"
             frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen>
@@ -116,7 +116,7 @@
         }
       </div>
 
-      <div class="work-card-name">{{ work.video.name }}</div>
+      <div class="work-card-name">{{ work.title }}</div>
     </a>
   }
 

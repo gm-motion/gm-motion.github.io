@@ -16,6 +16,12 @@ export interface VideoItem {
   route: string;
 }
 
+export interface GfxProjectThumbnail {
+  title: string;
+  route: string;
+  thumbnail: VideoSource;
+}
+
 export interface MediaSource {
   mediaType: 'video' | 'image';
   alt?: string;
