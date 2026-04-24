@@ -9,8 +9,7 @@ import { RouterLink } from '@angular/router';
 
 import { FadeInDirective } from '../../core/directives/fade-in.directive';
 import { HeaderAnimationDirective } from '../../core/directives/header-animation.directive';
-import { VideoSource } from '../../core/models/sanity/commonSchemas';
-import { GfxProjectThumbnail } from '../../core/models/sanity/workPage';
+import { VideoSource, GfxProjectThumbnail } from '../../core/models/sanity/commonSchemas';
 import { SanityContentService } from '../../core/sanity/sanity-content.service';
 import { VideoPlayerService } from '../../core/services/video-player.service';
 

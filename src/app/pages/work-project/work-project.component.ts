@@ -11,23 +11,32 @@ import {SanityContentService} from '../../core/sanity/sanity-content.service';
 import { VideoPlayerService } from '../../core/services/video-player.service';
 
 interface MediaImage {
-  asset?: { url?: string };
+  asset?: {url?: string};
 }
 
 interface MediaSource {
-  mediaType: 'video' | 'image';
+  mediaType: 'video'|'image';
   alt?: string;
   video?: VideoSource;
   image?: MediaImage;
 }
 
-interface ResolvedGfxProjectSection {
-  subheader?: string;
-  paragraph?: string;
-  media: MediaSource;
+interface ResolvedMediaSource extends MediaSource {
   safeUrl?: SafeResourceUrl;
   uploadUrl?: string;
   imageUrl?: string;
+
+  aspectRatio?: number;
+  idealWidth?: number;
+}
+
+interface ResolvedGfxProjectSection {
+  subheader?: string;
+  banner?: {asset?: {url?: string}; alt?: string;};
+  paragraphs?: string[];
+  columns?: number;
+  mediaHeader?: string;
+  mediaItems: ResolvedMediaSource[];
 }
 
 interface ResolvedGfxProject {
@@ -37,7 +46,6 @@ interface ResolvedGfxProject {
   thumbnail?: VideoSource;
   sections?: ResolvedGfxProjectSection[];
 }
-
 
 @Component({
   selector: 'app-work-project',
@@ -85,7 +93,7 @@ export class WorkProjectComponent implements OnInit {
             subheader: newProject.subheader,
             slug: newProject.slug,
             thumbnail: newProject.thumbnail,
-            sections: this.buildGfxProjectSection(newProject.sections ?? []),
+            sections: this.buildGfxProjectSections(newProject.sections ?? []),
           });
 
           this.isLoading.set(false);
@@ -98,57 +106,103 @@ export class WorkProjectComponent implements OnInit {
       });
   }
 
-  private buildGfxProjectSection(
+  private buildGfxProjectSections(
     items: GfxProjectSection[],
   ): ResolvedGfxProjectSection[] {
-    return items
-      .filter(
-        (item): item is GfxProjectSection & { media: MediaSource } =>
-          !!item.media,
-      )
-      .map((item) => {
-        let safeUrl: SafeResourceUrl | undefined;
-        let uploadUrl: string | undefined;
-        let imageUrl: string | undefined;
-
-        if (item.media.mediaType === 'video' && item.media.video) {
-          const video = item.media.video;
-
-          if (video.sourceType === 'external') {
-            if (
-              (video.provider === 'vimeo' || video.provider === 'youtube') &&
-              video.url
-            ) {
-              safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-                this.videoPlayer.buildEmbedUrl(video.url, video.provider),
-              );
-            } else if (video.provider === 'direct' && video.url) {
-              uploadUrl = video.url;
-            }
-          } else if (video.sourceType === 'upload') {
-            uploadUrl = video.videoFile?.asset?.url;
-          }
-        }
-
-        if (item.media.mediaType === 'image') {
-          imageUrl = item.media.image?.asset?.url;
-        }
-
-        return {
-          subheader: item.subheader,
-          paragraph: item.paragraph,
-          media: item.media,
-          safeUrl,
-          uploadUrl,
-          imageUrl,
-        };
-      });
+    console.log(items[0])
+    return items.map((item) => ({
+      subheader: item.subheader,
+      banner: item.banner,
+      paragraphs: item.paragraphs ?? [],
+      columns: item.columns ?? 1,
+      mediaHeader: item.mediaHeader,
+      mediaItems: this.buildResolvedMediaItems(item.mediaItems ?? []),
+    }));
   }
 
-  getVideoUrl(video?: {
-    url?: string;
-    videoFile?: { asset?: { url?: string } };
-  }): string | undefined {
-    return video?.videoFile?.asset?.url || video?.url;
+  private buildResolvedMediaItems(items: MediaSource[]): ResolvedMediaSource[] {
+    return items.map((media) => {
+      let safeUrl: SafeResourceUrl | undefined;
+      let uploadUrl: string | undefined;
+      let imageUrl: string | undefined;
+
+      if (media.mediaType === 'video' && media.video) {
+        const video = media.video;
+
+        if (video.sourceType === 'external') {
+          if (
+            (video.provider === 'vimeo' || video.provider === 'youtube') &&
+            video.url
+          ) {
+            safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+              this.videoPlayer.buildEmbedUrl(video.url, video.provider),
+            );
+          } else if (video.provider === 'direct' && video.url) {
+            uploadUrl = video.url;
+          }
+        } else if (video.sourceType === 'upload') {
+          uploadUrl = video.videoFile?.asset?.url;
+        }
+      }
+
+      if (media.mediaType === 'image') {
+        imageUrl = media.image?.asset?.url;
+      }
+
+      return {
+        ...media,
+        safeUrl,
+        uploadUrl,
+        imageUrl,
+        aspectRatio: undefined,
+      };
+    });
+  }
+
+  setImageAspectRatio(
+    media: ResolvedMediaSource,
+    event: Event,
+    section: ResolvedGfxProjectSection,
+  ): void {
+    const img = event.target as HTMLImageElement;
+
+    media.aspectRatio = img.naturalWidth / img.naturalHeight;
+    this.setIdealMediaWidth(media, section);
+  }
+
+  setVideoAspectRatio(
+    media: ResolvedMediaSource,
+    event: Event,
+    section: ResolvedGfxProjectSection,
+  ): void {
+    const video = event.target as HTMLVideoElement;
+
+    media.aspectRatio = video.videoWidth / video.videoHeight;
+    this.setIdealMediaWidth(media, section);
+  }
+
+  private readonly GRID_GAP_PX = 32; // 2rem if root font-size is 16px
+
+  private setIdealMediaWidth(
+    media: ResolvedMediaSource,
+    section: ResolvedGfxProjectSection,
+  ): void {
+    const columns = section.columns || 1;
+
+    const viewportWidth = window.innerWidth;
+    const gridMaxWidth = Math.min(viewportWidth, 1200); // change to your actual section max-width
+
+    const totalGap = this.GRID_GAP_PX * (columns - 1);
+    const columnWidth = (gridMaxWidth - totalGap) / columns;
+
+    media.idealWidth = columnWidth;
+  }
+
+  setExternalVideoAspectRatio(
+    media: ResolvedMediaSource,
+    section: ResolvedGfxProjectSection,
+  ): void {
+    media.aspectRatio = media.aspectRatio ?? 16 / 9;
+    this.setIdealMediaWidth(media, section);
   }
 }

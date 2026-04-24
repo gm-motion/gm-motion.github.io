@@ -153,3 +153,14 @@ body {
   --mdc-switch-selected-focus-state-layer-color: transparent;
   --mdc-switch-selected-pressed-state-layer-color: transparent;
 }
+
+/* In global styles.scss */
+.gfx-media-container {
+  display: block !important;
+  align-self: start !important;
+  height: auto !important;
+}
+
+.gfx-media-grid {
+  align-items: start !important;
+}

@@ -4,7 +4,7 @@ import {RouterLink} from '@angular/router';
 
 import {FadeInDirective} from '../../core/directives/fade-in.directive';
 import {HeaderAnimationDirective} from '../../core/directives/header-animation.directive';
-import {Paragraph, VideoItem, VideoSource,} from '../../core/models/sanity/commonSchemas';
+import {Paragraph, VideoItem, VideoSource, GfxProjectThumbnail} from '../../core/models/sanity/commonSchemas';
 import {HomeData, PartneredClientItem} from '../../core/models/sanity/homePage';
 import {SanityContentService} from '../../core/sanity/sanity-content.service';
 import {VideoPlayerService} from '../../core/services/video-player.service';
@@ -15,9 +15,12 @@ interface ResolvedVideoSource extends VideoSource {
   uploadUrl?: string;
 }
 
-interface ResolvedVideoItem {
+interface ResolvedGfxThumbnail {
+  title: string;
   route: string;
-  video: ResolvedVideoSource;
+  thumbnail: VideoSource;
+  safeUrl?: SafeResourceUrl;
+  uploadUrl?: string;
 }
 
 @Component({
@@ -48,7 +51,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                                 safeUrl: '',
                               }));
 
-  gfxWorkSection: ResolvedVideoItem[] = [];
+  gfxWorkSection: ResolvedGfxThumbnail[] = [];
   partneredClientsSection: PartneredClientItem[] = [];
 
   scrollDistance = 0;
@@ -86,10 +89,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log(this.homeVideoStack);
       }
 
-      if (homePageData?.gfxWorkSection?.length) {
-        this.gfxWorkSection = homePageData.gfxWorkSection.map(
-            (item) => this.resolveVideoItem(item),
-        );
+      if (homePageData?.gfxProjects?.length) {
+        this.gfxWorkSection = this.resolveGfxThumbnail(homePageData.gfxProjects);
       }
 
       if (homePageData?.partneredClientsSection?.length) {
@@ -163,11 +164,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
   }
 
-  private resolveVideoItem(item: VideoItem): ResolvedVideoItem {
-    return {
-      route: item.route,
-      video: this.resolveVideoSource(item.video),
-    };
+  private resolveGfxThumbnail(projects: GfxProjectThumbnail[]): ResolvedGfxThumbnail[] {
+    return projects.map((project) => {
+      const resolvedVideo = this.resolveVideoSource(project.thumbnail);
+      return {
+        title: project.title,
+        route: project.route,
+        thumbnail: project.thumbnail,
+        safeUrl: resolvedVideo.safeUrl,
+        uploadUrl: resolvedVideo.uploadUrl,
+      }
+    })
   }
 
   @HostListener('window:scroll')

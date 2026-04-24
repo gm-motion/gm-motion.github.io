@@ -54,38 +54,6 @@ export default defineType({
       of: [{type: 'videoSource'}],
     }),
     defineField({
-      name: 'gfxWorkSection',
-      title: 'GFX Work Section',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'workItem',
-          title: 'Work Item',
-          fields: [
-            defineField({
-              name: 'video',
-              title: 'GFX Work Video',
-              type: 'videoSource',
-            }),
-            defineField({
-              name: 'route',
-              title: 'Route',
-              type: 'string',
-              description: 'Project route (e.g. /gfx-work/{project-name})',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'video.name',
-              subtitle: 'route',
-            },
-          },
-        },
-      ],
-    }),
-    defineField({
       name: 'partneredClientsSection',
       title: 'Partnered Clients Section',
       type: 'array',
