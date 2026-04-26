@@ -20,7 +20,7 @@ export class SanityContentService {
             alt
         },
         aboutInfoParagraphs[]{text},
-          timelineItems[]{
+        timelineItems[]{
           company,
           title,
           date,
@@ -36,6 +36,19 @@ export class SanityContentService {
             description,
             route
           }
+        },
+        aspirationParagraphs[]{text},
+        mentors[]{
+          name,
+          company,
+          title,
+          description,
+          headshot {
+            asset->{
+              url
+            },
+            alt
+          },
         }
     }`;
 

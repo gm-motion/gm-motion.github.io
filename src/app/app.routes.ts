@@ -8,7 +8,7 @@ import { WorkProjectComponent } from './pages/work-project/work-project.componen
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'about', component: AboutComponent },
+  { path: 'my-story', component: AboutComponent },
   { path: 'gfx-work', component: WorkComponent },
   { path: 'contact', component: ContactComponent },
   {

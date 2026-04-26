@@ -2,7 +2,7 @@
 
 <div class="about-container">
   <div fadeIn class="header-container fade-in">
-    <span headerAnimation class="header">About</span>
+    <span headerAnimation class="header">My Story</span>
   </div>
 
   <div class="about-info-container">
@@ -89,3 +89,69 @@
     </div>
   }
 </div>
+
+
+<section class="aspirations-container">
+  <div fadeIn class="header-container fade-in">
+    <span headerAnimation class="header">Aspirations</span>
+  </div>
+  <div fadeIn class="aspirations-paragraphs-container fade-in">
+    @for (p of aspirationParagraphs; track $index) {
+      <p>{{p.text}}</p>
+    }
+  </div>
+</section>
+
+<section class="mentors-container">
+  <div fadeIn class="header-container fade-in">
+    <span headerAnimation class="header">Mentors</span>
+  </div>
+
+  <div fadeIn class="mentor-slider-container fade-in">
+    <button class="slider-arrow left-arrow" type="button" (click)="showPrev(selectedIndex)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+    </button>
+
+<div class="mentor-slider-viewport">
+  <div class="mentor-slider-track">
+    @for (mentor of mentors; track mentor.name; let i = $index) {
+      <article
+        class="mentor-card"
+        [ngClass]="{
+          'selected': getIndex(i) === 0,
+          'prev': getIndex(i) === -1,
+          'next': getIndex(i) === 1,
+          'hideLeft': getIndex(i) < -1,
+          'hideRight': getIndex(i) > 1
+        }"
+      >
+        <img
+          [src]="mentor.headshot?.asset?.url"
+          [alt]="mentor.name + ' headshot'"
+          class="mentor-image"
+        />
+
+        <h2 class="mentor-name">{{ mentor.name }}</h2>
+
+        <div class="mentor-company-title-container">
+          <span class="mentor-company">{{ mentor.company }}</span>
+          <span class="mentor-title">{{ mentor.title }}</span>
+        </div>
+
+        <p class="mentor-description">
+          {{ mentor.description }}
+        </p>
+      </article>
+    }
+  </div>
+</div>
+
+    <button class="slider-arrow right-arrow" type="button" (click)="showNext(selectedIndex)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="m9 18 6-6-6-6" />
+      </svg>
+    </button>
+  </div>
+</section>
