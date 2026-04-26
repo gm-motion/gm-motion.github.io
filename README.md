@@ -1,25 +1,52 @@
-# gavinmorris.github.com
-This is the repository for my own portfolio website.
+# GM-Motion Portfolio Website
+This is the repository for Gavin Morris' portfolio website. The website is located [here](https://gm-motion.github.io)
 
-Open code in dev container and then run:
+# For Admin
+
+This website is hosted on Github Pages and uses Sanity.io to store assets and editable information.
+
+To edit website information, open the [Sanity Studio](https://gm-motion.sanity.studio/) for the project in a browser. Login through Github. 
+
+You will encounter the following 'Content' documents to edit:
+* About Page
+* Home Page
+* Work Page
+* Header and Footer 
+* GFX Project
+
+Each singular document contains relevant fields that can be modified and filled out. GFX Project is a "special" document as there can be multiple pages of this type (each page represents a different project).
+
+Certain fields have a **description** for the ideal content that best fits them (e.g. ".svg preferred. Should be a white logo on transparent background").
+
+When you are finished editing a Sanity document and wish to publish it, **YOU MUST CLICK PUBLISH** in the lower right corner. Otherwise, your changes will just become a draft. 
+
+There are various access limits on the Sanity free plan, but the most important are **Assets** and **Bandwidth** so be wise when choosing whether to upload a video/image directly or host it elsewhere (YouTube, Vimeo, etc.). Your limits can be viewed and managed [here](https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU).
+
+
+
+Any additional questions should be directed to [Benjamin Edwards](mailto:bkedwards4@gmail.com) 
+
+# For Developers
+
+To locally deploy website, open code in dev container and then run:
 ```
 npm start -- --host 0.0.0.0 --port 4200 --disable-host-check
 ```
 
-To run sanity, navigate to studio-gm-motion folder and run
+To run Sanity locally, navigate to `studio-gm-motion` folder:
+```
+cd studio-gm-motion
+``` 
+and run
 ```
 npm run dev -- --host 0.0.0.0
 ```
 
-To edit from Sanity Studio:
+To deploy Sanity, navigate to the `studio-gm-motion` folder and login using
 ```
-https://gm-motion.sanity.studio/
+npx sanity login
 ```
-To manage Sanity Studio account:
-```
-https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU
-```
-To deploy sanity:
+Select `gm-motion` as the project and login through Github. Once logged in, you can deploy the project using
 ```
 npx sanity deploy
 ```

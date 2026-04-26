@@ -22,7 +22,7 @@ export default defineType({
       title: 'Logo (White)',
       type: 'image',
       description:
-        '.svg preferred. Should be a white logo on transparent background for best results',
+          '.svg preferred. Should be a white logo on transparent background for best results. Image should ideally be vertically and horizontally centered in a 1:1 aspect ratio image.',
       options: {hotspot: true},
       fields: [
         defineField({
@@ -37,7 +37,7 @@ export default defineType({
       title: 'Logo (Black)',
       type: 'image',
       description:
-        '.svg preferred. Should be a black logo on transparent background for best results',
+          '.svg preferred. Should be a black logo on transparent background for best results. Image should ideally be vertically and horizontally centered in a 1:1 aspect ratio image.',
       options: {hotspot: true},
       fields: [
         defineField({
@@ -72,7 +72,7 @@ export default defineType({
               title: 'Icon',
               type: 'image',
               description:
-                '.svg preferred. Should be a white logo on transparent background for best results.',
+                  '.svg preferred. Should be a white logo on transparent background for best results. Image should ideally be vertically and horizontally centered in a 1:1 aspect ratio image.',
               options: {hotspot: true},
               fields: [
                 defineField({

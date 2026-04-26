@@ -20,6 +20,8 @@ export default defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
+      description:
+          'The designated route for the project, e.g. "/gfx-work/{slug}.',
       type: 'slug',
       options: {
         source: 'title',
@@ -30,6 +32,8 @@ export default defineType({
     defineField({
       name: 'thumbnail',
       title: 'GFX Work Thumbnail',
+      description:
+          'This thumbnail will be displayed on the /gfx-work page and on the /home page',
       type: 'videoSource',
       validation: (Rule) => Rule.required(),
     }),
@@ -42,5 +46,3 @@ export default defineType({
     }),
   ],
 })
-
-

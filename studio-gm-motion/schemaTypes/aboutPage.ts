@@ -8,6 +8,8 @@ export default defineType({
     defineField({
       name: 'headshot',
       title: 'Headshot',
+      description:
+          '.webp preferred. Ideally has a 1:1 aspect ratio for best fit.',
       type: 'image',
       options: {
         hotspot: true,
@@ -80,7 +82,7 @@ export default defineType({
               title: 'Logo',
               type: 'image',
               description:
-                '.webp preferred. Should be a white logo on transparent background for best results.',
+                  '.webp preferred. Should be a white logo on transparent background for best results.',
               options: {
                 hotspot: true,
               },
@@ -122,7 +124,8 @@ export default defineType({
                       name: 'route',
                       title: 'Route',
                       type: 'string',
-                      description: 'Project route (e.g. /gfx-work/{project-name})',
+                      description:
+                          'Project route (e.g. /gfx-work/{project-name}). This should match to a slug on a GFX Project page.',
                       validation: (Rule) => Rule.required(),
                     }),
                   ],
@@ -211,6 +214,8 @@ export default defineType({
               name: 'headshot',
               title: 'Headshot',
               type: 'image',
+              description:
+                  '.webp preferred. Ideally has a 1:1 aspect ratio for best fit.',
               options: {
                 hotspot: true,
               },
