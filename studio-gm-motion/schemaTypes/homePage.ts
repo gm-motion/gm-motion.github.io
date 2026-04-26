@@ -73,7 +73,7 @@ export default defineType({
               title: 'Image',
               type: 'image',
               description:
-                  '.webp preferred. Should be a white logo on transparent background for best results.',
+                  '.webp preferred. Should be a white logo on transparent background for best results. Image should ideally be vertically and horizontally centered in a 1:1 aspect ratio image.',
               options: {
                 hotspot: true,
               },

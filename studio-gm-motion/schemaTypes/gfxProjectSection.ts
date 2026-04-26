@@ -37,6 +37,7 @@ export default defineType({
     defineField({
       name: 'columns',
       title: 'Columns',
+      description: 'How many columns should the media fill across? Ideal values are 1 - 3.',
       type: 'number',
       initialValue: 1,
       validation: (Rule) => Rule.required().integer().min(1),
