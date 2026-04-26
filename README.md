@@ -20,8 +20,7 @@ Certain fields have a **description** for the ideal content that best fits them 
 
 When you are finished editing a Sanity document and wish to publish it, **YOU MUST CLICK PUBLISH** in the lower right corner. Otherwise, your changes will just become a draft. 
 
-There are various access limits on the Sanity free plan, but the most important are **Assets** and **Bandwidth** so be wise when choosing whether to upload a video/image directly or host it elsewhere (YouTube, Vimeo, etc.). Your limits can be viewed and managed [here](https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU).
-
+There are various access limits on the Sanity free plan, but the most important are **Assets** and **Bandwidth** so be wise when choosing whether to upload a video/image directly or host it elsewhere (YouTube, Vimeo, etc.). Your limits can be viewed and managed [here](https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU) (login through Github).
 
 
 Any additional questions should be directed to [Benjamin Edwards](mailto:bkedwards4@gmail.com) 
