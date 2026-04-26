@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TimelineItem } from '../../core/models/sanity/aboutPage';
+import { TimelineItem, Mentor } from '../../core/models/sanity/aboutPage';
 import { Paragraph } from '../../core/models/sanity/commonSchemas';
 import { RouterLink } from '@angular/router';
 import { FadeInDirective } from '../../core/directives/fade-in.directive';
@@ -26,7 +26,7 @@ import { HeaderAnimationDirective } from '../../core/directives/header-animation
   ],
   standalone: true,
   templateUrl: './about.component.html',
-  styleUrl: './about.component.css',
+  styleUrl: './about.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -37,8 +37,9 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   headshot = '/assets/about/headshot.webp';
   aboutInfoParagraphs: Paragraph[] = [];
   headshotAlt = '';
-
   timelineItems: TimelineItem[] = [];
+  mentors: Mentor[] = [];
+  aspirationParagraphs: Paragraph[] = [];
 
   constructor(
     private sanityContentService: SanityContentService,
@@ -63,7 +64,15 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (aboutData?.timelineItems?.length) {
         this.timelineItems = [...aboutData.timelineItems];
-        console.log(this.timelineItems);
+      }
+
+      if (aboutData?.aspirationParagraphs?.length) {
+        this.aspirationParagraphs = [...aboutData.aspirationParagraphs];
+        console.log("Check", this.aspirationParagraphs)
+      }
+
+      if (aboutData?.mentors?.length) {
+        this.mentors = [...aboutData.mentors];
       }
 
       this.cdr.markForCheck();
@@ -88,6 +97,51 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.nameObserver.observe(this.nameElement.nativeElement);
+  }
+
+  selectedIndex = 0;
+  isTransitioning = false;
+
+  get currentIndex(): number {
+    const total = this.mentors.length;
+    return ((this.selectedIndex % total) + total) % total;
+  }
+
+  getIndex(i: number): number {
+    const total = this.mentors.length;
+    const rawOffset = i - this.currentIndex;
+    const half = Math.floor(total / 2);
+
+    if (rawOffset > half) return rawOffset - total;
+    if (rawOffset < -half) return rawOffset + total;
+
+    return rawOffset;
+  }
+
+  showPrev(_: number): void {
+    if (this.isTransitioning) return;
+
+    this.isTransitioning = true;
+    this.selectedIndex--;
+
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 250);
+  }
+
+  showNext(_: number): void {
+    if (this.isTransitioning) return;
+
+    this.isTransitioning = true;
+    this.selectedIndex++;
+
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 250);
+  }
+
+  goTo(index: number): void {
+    this.selectedIndex = index;
   }
 
   ngOnDestroy(): void {

@@ -146,5 +146,99 @@ export default defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'aspirationParagraphs',
+      title: 'Aspirations Paragraphs',
+      type: 'array',
+      of: [
+        defineField({
+          name: 'paragraph',
+          title: 'Paragraph',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'text',
+              title: 'Text',
+              type: 'text',
+              rows: 4,
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'text',
+            },
+            prepare({title}) {
+              return {
+                title: title || 'Empty paragraph',
+              }
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'mentors',
+      title: 'Mentors',
+      type: 'array',
+      of: [
+        defineField({
+          name: 'mentor',
+          title: 'Mentor',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+            }),
+            defineField({
+              name: 'company',
+              title: 'Company',
+              type: 'string',
+            }),
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+            }),
+            defineField({
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+              rows: 3,
+            }),
+            defineField({
+              name: 'headshot',
+              title: 'Headshot',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+              fields: [
+                defineField({
+                  name: 'alt',
+                  title: 'Alt Text',
+                  type: 'string',
+                }),
+              ],
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'name',
+              subtitle: 'company',
+              media: 'headshot',
+            },
+            prepare({title, subtitle, media}) {
+              return {
+                title: title || 'Unnamed mentor',
+                subtitle: subtitle || 'No company',
+                media,
+              }
+            },
+          },
+        }),
+      ],
+    }),
   ],
 })
