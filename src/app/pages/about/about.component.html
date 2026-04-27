@@ -119,6 +119,8 @@
     @for (mentor of mentors; track mentor.name; let i = $index) {
       <article
         class="mentor-card"
+        (panright)="showPrev(i)"
+        (panleft)="showNext(i)"
         [ngClass]="{
           'selected': getIndex(i) === 0,
           'prev': getIndex(i) === -1,
