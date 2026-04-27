@@ -15,6 +15,7 @@ import { Paragraph } from '../../core/models/sanity/commonSchemas';
 import { RouterLink } from '@angular/router';
 import { FadeInDirective } from '../../core/directives/fade-in.directive';
 import { HeaderAnimationDirective } from '../../core/directives/header-animation.directive';
+import { HammerModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-about',
@@ -23,6 +24,7 @@ import { HeaderAnimationDirective } from '../../core/directives/header-animation
     RouterLink,
     FadeInDirective,
     HeaderAnimationDirective,
+    HammerModule
   ],
   standalone: true,
   templateUrl: './about.component.html',

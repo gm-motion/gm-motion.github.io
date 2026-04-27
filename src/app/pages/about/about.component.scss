@@ -735,7 +735,7 @@
     font-size: calc(var(--font-paragraph) * 0.9);
   }
 
-    .aspirations-paragraphs-container {
+  .aspirations-paragraphs-container {
     width: 70%;
   }
 
@@ -1072,9 +1072,8 @@
 
   .mentor-card {
     width: 100%;
-    max-width: 340px;
-    height: auto;
-    min-height: 400px;
+    // max-width: 340px;
+    height: 100%;
     padding: 1rem;
   }
 
