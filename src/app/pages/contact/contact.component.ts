@@ -29,10 +29,10 @@ export class ContactComponent {
     this.isSending.set(true);
     emailjs
       .sendForm(
-        'service_4wl205l',
-        'template_g2rnp8p',
+        'service_oho6pbs',
+        'template_y6f7ddg',
         event.target as HTMLFormElement,
-        'SQCU20t7kVZpEjRV-',
+        'IF34-1wHmyGvt5E4v',
       )
       .then(
         () => {
