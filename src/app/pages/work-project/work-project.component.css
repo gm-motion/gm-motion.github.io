@@ -405,6 +405,11 @@
     grid-template-columns: 1fr !important;
   }
 
+  .gfx-media-container {
+    width: 92%;
+    margin: 0 auto;
+  }
+
   .gfx-project-image,
   .gfx-project-video,
   .gfx-media-container > img,
