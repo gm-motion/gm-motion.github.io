@@ -71,6 +71,25 @@ export class WorkComponent implements OnInit {
     })),
   );
 
+  images = [
+    {
+      url: 'assets/img1:1.png',
+      alt: 'img',
+    },
+    {
+      url: 'assets/img1:1.png',
+      alt: 'img',
+    },
+    {
+      url: 'assets/img1:1.png',
+      alt: 'img',
+    },
+    {
+      url: 'assets/img16:9.png',
+      alt: 'img',
+    },
+  ];
+
   constructor(
     private sanitizer: DomSanitizer,
     private sanityContentService: SanityContentService,
