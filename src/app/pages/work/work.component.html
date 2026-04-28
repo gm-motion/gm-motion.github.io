@@ -68,58 +68,62 @@
 </div>
 
 <div fadeIn class="media-card-container fade-in">
-  <div class="media-masonry">
-    @for (card of photoVideoMedia; track $index) {
-      <div class="media-card">
-        <div class="media-card-visual">
+  <div class="custom-media-grid">
+    @for (card of photoVideoMedia.slice(0, 9); track $index) {
+      <div class="custom-media-item">
+        @if (card.media.mediaType === 'image' && card.imageUrl) {
+          <img
+            class="custom-media"
+            [src]="card.imageUrl"
+            [alt]="card.media.alt || 'Media image'"
+            loading="lazy"
+            decoding="async"
+          />
+        }
 
-          @if (card.media.mediaType === 'image' && card.imageUrl) {
-            <img
-              [src]="card.imageUrl"
-              [alt]="card.media.alt || 'Media image'"
-              class="media-card-image"
-              loading="eager"
-              fetchpriority="high"
-              decoding="async"
-            />
+        @else if (card.media.mediaType === 'video' && card.media.video) {
+          @if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
+            <video
+              class="custom-media"
+              [src]="card.uploadUrl"
+              [attr.aria-label]="card.media.video.name || 'Media video'"
+              autoplay
+              [muted]="true"
+              loop
+              playsinline
+              preload="metadata">
+            </video>
           }
 
-          @else if (card.media.mediaType === 'video' && card.media.video) {
-
-            @if (card.media.video.sourceType === 'upload' && card.uploadUrl) {
-              <video
-                class="media-card-video"
-                [src]="card.uploadUrl"
-                [attr.aria-label]="card.media.video.name"
-                autoplay
-                [muted]="true"
-                loop
-                playsinline
-                preload="metadata">
-              </video>
-            }
-
-            @else if (card.media.video.sourceType === 'external' && card.safeUrl) {
-              <iframe
-                class="media-card-video"
-                [src]="card.safeUrl"
-                [title]="card.media.video.name"
-                frameborder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowfullscreen>
-              </iframe>
-            }
-
+          @else if (card.media.video.sourceType === 'external' && card.safeUrl) {
+            <iframe
+              class="custom-media"
+              [src]="card.safeUrl"
+              [title]="card.media.video.name || 'Media video'"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen>
+            </iframe>
           }
-
-        </div>
+        }
       </div>
     }
   </div>
+  <!-- <div class="custom-image-grid">
+    @for (image of images.slice(0, 9); track $index) {
+      <img
+        [src]="image.url"
+        [alt]="image.alt || 'Grid image'"
+        loading="lazy"
+        decoding="async"
+      />
+    }
+  </div> -->
 
-    <button routerLink="/contact" class="my-button">
-        <span>Add Your Media!</span>
-    </button>
+
+  <button routerLink="/contact" class="my-button">
+      <span>Add Your Media!</span>
+  </button>
 
 </div>
 
