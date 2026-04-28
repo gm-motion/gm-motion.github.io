@@ -22,8 +22,18 @@ When you are finished editing a Sanity document and wish to publish it, **YOU MU
 
 There are various access limits on the Sanity free plan, but the most important are **Assets** and **Bandwidth** so be wise when choosing whether to upload a video/image directly or host it elsewhere (YouTube, Vimeo, etc.). Your limits can be viewed and managed [here](https://www.sanity.io/organizations/obUcQzySU/project/12s4nb6j?orgId=obUcQzySU) (login through Github).
 
-
 Any additional questions should be directed to [Benjamin Edwards](mailto:bkedwards4@gmail.com) 
+
+P.S. To edit the `favicon.ico` (the little logo that appears in the browser tab) it must be directly added to the code by me.
+
+# Sanity Video Recommendations
+A few recommendations based on my experiences while developing:
+* YouTube/Vimeo/Uploads all generally load fine on laptops/computers.
+* Vimeo has trouble loading on mobile. I have not had any issues with YouTube or Uploads though.
+
+I would recommend starting with Uploads for media that immediately appear on page load (i.e. the home page title video, the first few GFX Work thumbnails, etc). I would use YouTube for all other videos. 
+
+Still, I would keep in mind bandwith limits, especially for a large high-resolution title video.
 
 # For Developers
 
